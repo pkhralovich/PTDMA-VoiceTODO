@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/card_background"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="T12"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:layout_marginRight="10dp"
+        android:textSize="@dimen/font_small"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Lorem ipsum dolor sit amet, consect aeasdasdasdasdasd "
+        android:textColor="@color/black"
+        android:lines="2"
+        android:ellipsize="end"
+        android:textSize="@dimen/font_xsmall"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="17\nMAR"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_small"
+        android:gravity="center" />
+</LinearLayout>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/card_background"
+    android:orientation="vertical"
+    android:elevation="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="T12"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:layout_marginRight="10dp"
+            android:textSize="@dimen/font_small"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Lorem ipsum dolor sit amet, consect aeasdasdasdasdasd "
+            android:textColor="@color/black"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="@dimen/font_xsmall"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="0.75">
+
+        <View
+            android:id="@+id/state_todo"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_completed"
+            android:layout_marginEnd="5dp"/>
+
+        <View
+            android:id="@+id/first_horizontal_rule"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight="0.25"
+            android:background="@color/primary"
+            android:layout_gravity="center_vertical"/>
+
+        <View
+            android:id="@+id/state_doing"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_completed"
+            android:layout_marginHorizontal="5dp"/>
+
+
+        <View
+            android:id="@+id/second_horizontal_rule"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight="0.25"
+            android:background="@color/primary"
+            android:layout_gravity="center_vertical"/>
+
+        <View
+            android:id="@+id/state_revision"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_uncompleted"
+            android:layout_marginHorizontal="5dp"/>
+
+        <View
+            android:id="@+id/third_horizontal_rule"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight="0.25"
+            android:background="@color/primary"
+            android:layout_gravity="center_vertical"/>
+
+        <View
+            android:id="@+id/state_completed"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_completed_last"
+            android:layout_marginStart="5dp"/>
+    </LinearLayout>
+</LinearLayout>
