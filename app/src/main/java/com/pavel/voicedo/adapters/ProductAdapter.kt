@@ -9,15 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pavel.voicedo.R
 import com.pavel.voicedo.models.Product
 
-class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private val data : List<Product>
-
-    constructor(_data: List<Product>) : super() {
-        data = _data
-    }
+class ProductAdapter(_data: List<Product>) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+    private val data : List<Product> = _data
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        var v: View = LayoutInflater.from(parent.context).inflate(R.layout.product_item, parent, false)
+        val v: View = LayoutInflater.from(parent.context).inflate(R.layout.product_item, parent, false)
         return ProductViewHolder(v)
     }
 

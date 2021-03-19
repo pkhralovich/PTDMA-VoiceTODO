@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:padding="10dp"
-    android:layout_margin="10dp"
-    android:background="@drawable/card_background">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/card_padding"
+    android:layout_marginBottom="@dimen/card_spacing"
+    android:background="@drawable/card_background"
+    android:weightSum="1"
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/label_name"
-        android:layout_width="match_parent"
+
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:text="Butcher shopping list"
+        android:layout_weight="1"
+
+        android:text="@string/mock_shopping_list"
         android:textStyle="bold"
         android:textColor="@color/primary"
-        android:layout_marginRight="10dp"
         android:textSize="@dimen/font_small"
-        android:gravity="start|center"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@id/label_count"/>
+
+        android:layout_marginEnd="@dimen/default_spacing"
+        android:gravity="start|center" />
 
     <TextView
         android:id="@+id/label_count"
-        android:layout_width="wrap_content"
+
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="17\nITEMS"
+
+        android:text="@string/mock_list_count"
         android:textStyle="bold"
         android:textColor="@color/primary"
         android:textSize="@dimen/font_small"
-        android:gravity="center"
-        android:layout_alignParentEnd="true"/>
-</RelativeLayout>
+
+        android:gravity="center" />
+</LinearLayout>

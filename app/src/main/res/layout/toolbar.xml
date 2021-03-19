@@ -1,9 +1,12 @@
-<com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent"
-    android:id="@+id/app_bar"
-    android:layout_alignParentTop="true"
+<com.google.android.material.appbar.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_alignParentTop="true"
+
+    android:id="@+id/app_bar"
+    android:background="?attr/colorPrimary">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,33 +14,42 @@
 
         <ImageView
             android:id="@+id/app_icon"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:layout_marginEnd="12dp"
+
+            android:layout_width="@dimen/toolbar_icon_size"
+            android:layout_height="@dimen/toolbar_icon_size"
+
+            android:layout_marginHorizontal="@dimen/default_spacing"
+            android:layout_centerVertical="true"
+
             android:src="@drawable/ic_logo"
             android:contentDescription="@string/app_name"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:gravity="center_vertical"
             android:textSize="@dimen/font_medium"
             android:textStyle="bold"
+
+            android:gravity="center_vertical"
             android:layout_toEndOf="@id/app_icon"
             android:layout_toStartOf="@id/info_icon"
             />
 
         <ImageButton
             android:id="@+id/info_icon"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
-            android:padding="14dp"
+
+            android:layout_width="@dimen/toolbar_icon_size"
+            android:layout_height="@dimen/toolbar_icon_size"
+
+            android:layout_marginHorizontal="@dimen/default_spacing"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
+
             android:src="@drawable/ic_help"
             android:contentDescription="@string/app_name"
-            android:background="@color/primary"/>
+            android:backgroundTint="@color/primary"/>
     </RelativeLayout>
 </com.google.android.material.appbar.AppBarLayout>

@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name">Voice Do</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="title_activity_main">MainActivity</string>
+    <!-- DESCRIPCIO DE LES IMATGES -->
     <string name="icon_micro">Micrófono</string>
+    <string name="icon_doing">En curso</string>
+    <string name="icon_done">Completado</string>
+
+    <!-- TEXTOS MOSTRA -->
+    <string name="mock_task_id">T13</string>
+    <string name="mock_event_id">E13</string>
+    <string name="mock_event_date">17 MAR</string>
+    <string name="mock_list_count">30 ITEMS</string>
+    <string name="mock_long_text">Lorem ipsum dolor sit amet, consect aeasdasdasdasdasd</string>
+    <string name="mock_shopping_list">Butcher list</string>
+    <string name="mock_product">Hamburguesa de ternera</string>
 </resources>
