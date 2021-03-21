@@ -1,6 +1,8 @@
 package com.pavel.voicedo.models
 
-abstract class BaseModel {
+import java.io.Serializable
+
+abstract class BaseModel : Serializable {
     var id: Int
 
     constructor() {

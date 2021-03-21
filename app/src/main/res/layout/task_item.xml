@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/default_spacing"
+    android:padding="@dimen/card_padding"
     android:layout_marginBottom="@dimen/card_spacing"
     android:background="@drawable/card_background"
     android:orientation="vertical"
@@ -13,7 +13,7 @@
         android:layout_height="30dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="@dimen/default_spacing">
+        android:layout_marginBottom="@dimen/default_spacing_small">
 
         <TextView
             android:id="@+id/label_id"
@@ -27,7 +27,8 @@
             android:textSize="@dimen/font_small"
 
             android:gravity="center_vertical"
-            android:layout_marginEnd="@dimen/default_spacing"/>
+            android:layout_marginEnd="@dimen/default_spacing_small"
+            android:layout_marginStart="2dp"/>
 
         <TextView
             android:id="@+id/label_name"
@@ -36,7 +37,7 @@
 
             android:text="@string/mock_long_text"
 
-            android:textColor="@color/black"
+            android:textColor="@color/font_dark"
             android:textSize="@dimen/font_xsmall"
 
             android:lines="1"
@@ -56,7 +57,7 @@
 
             android:layout_width="@dimen/icon_state_size"
             android:layout_height="@dimen/icon_state_size"
-            android:layout_marginEnd="@dimen/default_spacing"
+            android:layout_marginEnd="@dimen/default_spacing_small"
 
             android:background="@drawable/ic_completed"
             android:contentDescription="@string/icon_doing"/>
@@ -75,7 +76,7 @@
 
             android:layout_width="@dimen/icon_state_size"
             android:layout_height="@dimen/icon_state_size"
-            android:layout_marginHorizontal="@dimen/default_spacing"
+            android:layout_marginHorizontal="@dimen/default_spacing_small"
 
             android:src="@drawable/ic_completed"
             android:contentDescription="@string/icon_doing"/>
@@ -94,7 +95,7 @@
 
             android:layout_width="@dimen/icon_state_size"
             android:layout_height="@dimen/icon_state_size"
-            android:layout_marginStart="@dimen/default_spacing"
+            android:layout_marginStart="@dimen/default_spacing_small"
 
             android:src="@drawable/ic_completed_last"
             android:contentDescription="@string/icon_done"/>

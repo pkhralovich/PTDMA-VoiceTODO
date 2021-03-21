@@ -2,7 +2,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_size">56dp</dimen>
 
-    <dimen name="default_spacing">10dp</dimen>
+    <dimen name="default_spacing">15dp</dimen>
+    <dimen name="default_spacing_small">10dp</dimen>
 
     <dimen name="font_xlarge">24sp</dimen>
     <dimen name="font_medium">18sp</dimen>

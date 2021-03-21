@@ -8,10 +8,21 @@
 
     <!-- TEXTOS MOSTRA -->
     <string name="mock_task_id">T13</string>
+    <string name="mock_task_state">Doing</string>
     <string name="mock_event_id">E13</string>
     <string name="mock_event_date">17 MAR</string>
     <string name="mock_list_count">30 ITEMS</string>
     <string name="mock_long_text">Lorem ipsum dolor sit amet, consect aeasdasdasdasdasd</string>
+    <string name="mock_very_long_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+        do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+        dolor in reprehenderit in voluptate velit esse cillum dolore.</string>
     <string name="mock_shopping_list">Butcher list</string>
     <string name="mock_product">Hamburguesa de ternera</string>
+    <string name="mock_task_date">23.05.2020 13:00:00</string>
+
+    <!-- ACTIVITY TASK -->
+    <string name="label_task_description">Task description</string>
+    <string name="label_task_state">Task state</string>
+    <string name="label_task_date">State date</string>
 </resources>

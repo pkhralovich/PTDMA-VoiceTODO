@@ -12,6 +12,10 @@
         android:theme="@style/Theme.VoiceDo.NoActionBar">
 
         <activity android:name=".activities.MainActivity"/>
+        <activity android:name=".activities.EventActivity"/>
+        <activity android:name=".activities.ListActivity"/>
+        <activity android:name=".activities.ListenActivity"/>
+        <activity android:name=".activities.TaskActivity"/>
         <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

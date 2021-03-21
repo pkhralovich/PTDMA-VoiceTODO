@@ -20,6 +20,7 @@
         android:textSize="@dimen/font_small"
 
         android:layout_marginEnd="@dimen/default_spacing"
+        android:layout_marginStart="2dp"
         android:gravity="center"/>
 
     <TextView
@@ -29,7 +30,7 @@
         android:layout_weight="1"
 
         android:text="@string/mock_long_text"
-        android:textColor="@color/black"
+        android:textColor="@color/font_dark"
         android:textSize="@dimen/font_xsmall"
 
         android:lines="2"

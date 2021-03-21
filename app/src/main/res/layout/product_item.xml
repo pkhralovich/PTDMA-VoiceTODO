@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
 
         android:text="@string/mock_product"
-        android:textColor="@color/black"
+        android:textColor="@color/font_dark"
         android:textSize="@dimen/font_xsmall"
 
         android:layout_toStartOf="@id/input_checked"

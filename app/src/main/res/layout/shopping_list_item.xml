@@ -23,6 +23,7 @@
         android:textSize="@dimen/font_small"
 
         android:layout_marginEnd="@dimen/default_spacing"
+        android:layout_marginStart="2dp"
         android:gravity="start|center"/>
 
     <TextView

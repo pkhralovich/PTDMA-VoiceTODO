@@ -1,5 +1,6 @@
 package com.pavel.voicedo.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity(), TodoAdapter.Controller{
         list.add(ShoppingList(11, "List test 3", arrayListOf()))
 
         recycler.addOnScrollListener(HideFabListener(fab))
-        recycler.adapter = TodoAdapter(list)
+        recycler.adapter = TodoAdapter(list, this)
     }
 
     class HideFabListener(private val fab: FloatingActionButton) : RecyclerView.OnScrollListener() {
@@ -56,10 +57,30 @@ class MainActivity : AppCompatActivity(), TodoAdapter.Controller{
         val task : BaseTask = list.get(itemPosition)
 
         when (task.type) {
-            BaseTask.eTypes.TASK -> { }
-            BaseTask.eTypes.EVENT -> { }
-            BaseTask.eTypes.LIST -> { }
+            BaseTask.eTypes.TASK -> {
+                val intent = Intent(this, TaskActivity::class.java)
+                intent.putExtra(PARAMS.TASK, task as Task)
+                startActivity(intent)
+            }
+            BaseTask.eTypes.EVENT -> {
+                val intent = Intent(this, EventActivity::class.java)
+                intent.putExtra(PARAMS.EVENT, task as Event)
+                startActivity(intent)
+            }
+            BaseTask.eTypes.LIST -> {
+                val intent = Intent(this, ListActivity::class.java)
+                intent.putExtra(PARAMS.LIST, task as ShoppingList)
+                startActivity(intent)
+            }
             else -> { }
+        }
+    }
+
+    class PARAMS {
+        companion object {
+            const val TASK : String = "TASK"
+            const val LIST : String = "LIST"
+            const val EVENT : String = "EVENT"
         }
     }
 }
