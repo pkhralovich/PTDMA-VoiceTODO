@@ -22,6 +22,7 @@
     <string name="mock_task_date">23.05.2020 13:00:00</string>
     <string name="mock_event_time">13:00</string>
     <string name="mock_event_full_date">23.05.2020</string>
+    <string name="mock_shopping_list_name">Butcher</string>
 
     <!-- ACTIVITY TASK -->
     <string name="label_task_description">Task description</string>
@@ -31,4 +32,8 @@
     <!-- ACTIVITY EVENT -->
     <string name="label_event_date">Event date</string>
     <string name="label_event_description">Event description</string>
+
+    <!-- ACTIVITY LIST -->
+    <string name="label_list_name">List name</string>
+    <string name="label_list_items">List items</string>
 </resources>

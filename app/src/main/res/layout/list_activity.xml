@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background">
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/app_bar"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/default_spacing"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/label_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_spacing_small"
+
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/font_small"
+            android:textAllCaps="true"
+
+            android:text="@string/label_list_name"/>
+
+        <EditText
+            android:id="@+id/input_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_spacing"
+
+            android:layout_marginBottom="@dimen/card_spacing"
+            android:background="@drawable/card_background"
+            android:orientation="vertical"
+            android:elevation="@dimen/card_elevation"
+
+            android:textColor="@color/font_dark"
+            android:textSize="@dimen/font_small"
+            android:text="@string/mock_shopping_list_name"/>
+
+        <TextView
+            android:id="@+id/label_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_spacing_small"
+
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/font_small"
+            android:textAllCaps="true"
+
+            android:text="@string/label_list_items"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/default_spacing"
+
+            android:background="@drawable/card_background"
+            android:orientation="vertical"
+            android:elevation="@dimen/card_elevation" />
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+
+        android:layout_margin="@dimen/fab_margin"
+
+        android:src="@drawable/ic_microphone"
+        android:contentDescription="@string/icon_micro"/>
+</RelativeLayout>

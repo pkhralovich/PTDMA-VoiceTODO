@@ -9,12 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.VoiceDo.NoActionBar">
 
-        <activity android:name=".activities.MainActivity"/>
-        <activity android:name=".activities.EventActivity"/>
-        <activity android:name=".activities.ListActivity"/>
-        <activity android:name=".activities.ListenActivity"/>
-        <activity android:name=".activities.TaskActivity"/>
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.MainActivity"   android:screenOrientation="portrait"/>
+        <activity android:name=".activities.EventActivity"  android:screenOrientation="portrait"/>
+        <activity android:name=".activities.ListActivity"   android:screenOrientation="portrait"/>
+        <activity android:name=".activities.ListenActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activities.TaskActivity"   android:screenOrientation="portrait"/>
+        <activity android:name=".activities.SplashActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
