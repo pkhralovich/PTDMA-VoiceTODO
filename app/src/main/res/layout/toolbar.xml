@@ -25,6 +25,7 @@
             android:contentDescription="@string/app_name"/>
 
         <TextView
+            android:id="@+id/toolbar_label"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 

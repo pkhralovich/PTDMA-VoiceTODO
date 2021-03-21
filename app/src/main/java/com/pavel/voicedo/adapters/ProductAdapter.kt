@@ -18,14 +18,14 @@ class ProductAdapter(_data: List<Product>) : RecyclerView.Adapter<ProductAdapter
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val p = data[position]
+        val p = data.get(position)
 
         holder.input_checkbox.isChecked = p.bought
         holder.label_name.text = p.description
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return data.count()
     }
 
     class ProductViewHolder : RecyclerView.ViewHolder {

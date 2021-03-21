@@ -5,6 +5,7 @@
 
     <!-- DESCRIPCIO DE LES IMATGES -->
     <string name="icon_micro">Micrófono</string>
+    <string name="icon_question">Pregunta</string>
     <string name="icon_doing">En curso</string>
     <string name="icon_done">Completado</string>
 
@@ -26,19 +27,57 @@
     <string name="mock_event_full_date">23.05.2020</string>
     <string name="mock_shopping_list_name">Butcher</string>
 
+    <!-- ACTIVITY MAIN -->
+    <string name="location_permission_granted">Location permission enabled</string>
+    <string name="location_permission_not_granted">Location permission NOT enabled</string>
+    <string name="main_help_actions">Actions</string>
+    <string name="main_help_actions_list_1"> Create/delete task </string>
+    <string name="main_help_actions_list_2"> Create/delete event </string>
+    <string name="main_help_actions_list_3"> Create/delete list </string>
+    <string name="main_help_view">View</string>
+    <string name="main_help_view_list_1">View task 12</string>
+    <string name="main_help_view_list_2">View event 16</string>
+    <string name="main_help_view_list_3">View list butcer</string>
+    <string name="main_help_queries">Queries</string>
+    <string name="main_help_queries_list_1">Show all tasks</string>
+    <string name="main_help_queries_list_2">Show all events</string>
+    <string name="main_help_queries_list_3">Show all lists</string>
+    <string name="main_help_queries_list_4">Show undone tasks</string>
+    <string name="main_help_queries_list_5">Show tasks in process</string>
+    <string name="main_help_queries_list_6">View events on &lt;weekday&gt; </string>
+    <string name="main_help_queries_list_7">View events this week</string>
+    <string name="main_help_queries_list_8">View events next week</string>
+    <string name="main_help_queries_list_9">View events tomorrow</string>
+    <string name="main_help_queries_list_10">View my location</string>
+
     <!-- ACTIVITY TASK -->
     <string name="label_task_description">Task description</string>
     <string name="label_task_state">Task state</string>
     <string name="label_task_date">State date</string>
+    <string name="state_todo">PENDING</string>
+    <string name="state_doing">DOING</string>
+    <string name="state_done">DONE</string>
 
     <!-- ACTIVITY EVENT -->
     <string name="label_event_date">Event date</string>
     <string name="label_event_description">Event description</string>
+    <string name="remove_event_help">Say "remove event" to remove the current event</string>
+    <string name="edit_event_name_help">Say "edit name" to enter a new name for this event</string>
+    <string name="edit_event_date_help">Say "edit date" to enter a new date for this event</string>
+    <string name="edit_event_back_help">Say "back" to close the current event</string>
 
     <!-- ACTIVITY LIST -->
     <string name="label_list_name">List name</string>
     <string name="label_list_items">List items</string>
+    <string name="remove_list_help">Say "remove list" to remove the current list</string>
+    <string name="edit_list_name_help">Say "edit name" to enter a new name for this list</string>
+    <string name="edit_list_products_help">Say "edit list" to enter a new date for this list</string>
+    <string name="edit_list_back_help">Say "back" to return to the previous page</string>
 
     <!-- RESPONSE MESSAGES -->
     <string name="response_how_can_help">Hi! How can I help you?</string>
+    <string name="remove_task_help">Say "remove task" to remove the current task</string>
+    <string name="edit_task_name_help">Say "edit name" to enter a new name for this task</string>
+    <string name="edit_task_state_help">Say "edit state" to enter a new state for this task</string>
+    <string name="edit_task_back_help">Say "back" to return to the previous page</string>
 </resources>

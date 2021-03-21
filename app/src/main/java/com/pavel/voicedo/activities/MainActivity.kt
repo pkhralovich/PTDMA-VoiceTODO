@@ -1,22 +1,39 @@
 package com.pavel.voicedo.activities
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnClick
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.pavel.voicedo.R
 import com.pavel.voicedo.adapters.TodoAdapter
 import com.pavel.voicedo.models.*
 import org.joda.time.DateTime
+import android.Manifest
+import android.widget.Toast
+import butterknife.OnClick
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.pavel.voicedo.R
+import com.pavel.voicedo.activities.base.ToolbarActivity
+import com.pavel.voicedo.dialogs.MainHelpDialog
+import com.pavel.voicedo.listeners.HideFabOnScrollListener
 
-class MainActivity : AppCompatActivity(), TodoAdapter.Controller{
+
+class MainActivity : ToolbarActivity(), TodoAdapter.Controller{
+    class PARAMS {
+        companion object {
+            const val TASK : String = "TASK"
+            const val LIST : String = "LIST"
+            const val EVENT : String = "EVENT"
+        }
+    }
+
     companion object {
         const val REQUEST_CODE : Int = 100
+        const val PERMISSION_REQUEST_LOCATION = 99
     }
 
     @BindView(R.id.recycler_view)
@@ -32,6 +49,17 @@ class MainActivity : AppCompatActivity(), TodoAdapter.Controller{
 
         ButterKnife.bind(this)
 
+        val products = arrayListOf<Product>(Product("Best product 1", false),
+                                            Product("Best product 2", true),
+                                            Product("Best product 3", true),
+                                            Product("Best product 4", false),
+                                            Product("Best product 5", false),
+                                            Product("Best product 6", true),
+                                            Product("Best product 7", false),
+                                            Product("Best product 8", true),
+                                            Product("Best product 9", false),
+                                            Product("Best product 10", true))
+
         list = arrayListOf()
         list.add(Event(1, "Event test 1", DateTime.now()))
         list.add(Task(2, "Task test 1", Task.eTaskState.TODO))
@@ -42,25 +70,24 @@ class MainActivity : AppCompatActivity(), TodoAdapter.Controller{
         list.add(Task(7, "Task test 4", Task.eTaskState.DOING))
         list.add(Task(8, "Task test 5", Task.eTaskState.DONE))
         list.add(Event(9, "Event test 3", DateTime.now()))
-        list.add(ShoppingList(10, "List test 2", arrayListOf()))
-        list.add(ShoppingList(11, "List test 3", arrayListOf()))
+        list.add(ShoppingList(10, "List test 2", products))
+        list.add(ShoppingList(11, "List test 3", products))
 
-        recycler.addOnScrollListener(HideFabListener(fab))
+        recycler.addOnScrollListener(HideFabOnScrollListener(fab))
         recycler.adapter = TodoAdapter(list, this)
-    }
 
-    class HideFabListener(private val fab: FloatingActionButton) : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-            if (dy > 0 && fab.isShown) fab.hide()
-            else if (dy < 0 && !fab.isShown) fab.show()
-        }
+        checkLocationPermission()
     }
 
     @OnClick(R.id.fab)
-    fun onClickFab() {
+    fun onClickListen() {
         var i = Intent(this, ListenActivity::class.java)
-        startActivityForResult(i, REQUEST_CODE)
+        startActivityForResult(i, MainActivity.REQUEST_CODE)
+    }
+
+    @OnClick(R.id.info_icon)
+    fun onClickHelp() {
+        MainHelpDialog(this).show()
     }
 
     override fun onClickItem(item: View) {
@@ -87,11 +114,41 @@ class MainActivity : AppCompatActivity(), TodoAdapter.Controller{
         }
     }
 
-    class PARAMS {
-        companion object {
-            const val TASK : String = "TASK"
-            const val LIST : String = "LIST"
-            const val EVENT : String = "EVENT"
+    //region CHECK_LOCATION_PERMISSION
+    fun checkLocationPermission(): Boolean {
+        val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        return if (permission != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    PERMISSION_REQUEST_LOCATION
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    PERMISSION_REQUEST_LOCATION
+                )
+            }
+            false
+        } else true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            PERMISSION_REQUEST_LOCATION -> {
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    if (permission == PackageManager.PERMISSION_GRANTED) {
+                        val toast = Toast.makeText(this, R.string.location_permission_granted, Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+                } else {
+                    val toast = Toast.makeText(this, R.string.location_permission_not_granted, Toast.LENGTH_LONG)
+                    toast.show()
+                }
+            }
         }
     }
+    //endregion
 }

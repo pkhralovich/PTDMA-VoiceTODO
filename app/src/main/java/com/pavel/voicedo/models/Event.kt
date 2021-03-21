@@ -9,7 +9,15 @@ class Event : BaseTask {
         this.date = date;
     }
 
-    public fun getStringDate(): String {
-        return "${date.toString("DD")}\n${date.toString("MMM")}"
+    fun getStringDate(): String {
+        return "${date.toString("dd")}\n${date.toString("MMM")}"
+    }
+
+    fun getStringLongDate() : String {
+        return date.toString("dd.MM.YYYY")
+    }
+
+    fun getStringTime() : String {
+        return date.toString("HH:mm")
     }
 }

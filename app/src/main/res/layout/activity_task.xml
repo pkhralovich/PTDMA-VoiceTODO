@@ -33,7 +33,7 @@
 
             android:text="@string/label_task_description"/>
 
-        <EditText
+        <TextView
             android:id="@+id/input_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
 
                 android:text="@string/label_task_state"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/input_state"
                 android:layout_width="0dp"
                 android:layout_weight="0.6"
@@ -107,7 +107,7 @@
 
                 android:text="@string/label_task_date"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/input_date"
                 android:layout_width="0dp"
                 android:layout_weight="0.6"

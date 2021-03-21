@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/help_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+
+    android:padding="@dimen/card_spacing"
+    android:background="@drawable/card_background">
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/ic_help"
+        android:backgroundTint="@color/primary"
+        android:contentDescription="@string/icon_question"
+        android:padding="20dp"
+        android:layout_marginBottom="@dimen/default_spacing_small"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:textSize="@dimen/font_xlarge"
+        android:text="@string/main_help_actions"
+        android:textColor="#000"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+
+        android:layout_marginBottom="@dimen/default_spacing"
+        />
+</LinearLayout>
