@@ -7,7 +7,8 @@
     android:layout_marginBottom="@dimen/card_spacing"
     android:background="@drawable/card_background"
     android:weightSum="1"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:elevation="@dimen/card_elevation">
 
     <TextView
         android:id="@+id/label_name"
@@ -22,7 +23,7 @@
         android:textSize="@dimen/font_small"
 
         android:layout_marginEnd="@dimen/default_spacing"
-        android:gravity="start|center" />
+        android:gravity="start|center"/>
 
     <TextView
         android:id="@+id/label_count"

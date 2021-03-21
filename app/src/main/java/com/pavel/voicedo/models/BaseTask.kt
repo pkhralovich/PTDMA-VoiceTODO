@@ -1,8 +1,8 @@
 package com.pavel.voicedo.models
 
 abstract class BaseTask : BaseModel {
-    enum class eTypes {
-        UNDEFINED, TASK, EVENT, LIST
+    enum class eTypes(val value:Int) {
+        UNDEFINED(-1), TASK(0), EVENT(1), LIST(2)
     }
 
     var type: eTypes

@@ -4,5 +4,7 @@
     <color name="primary_dark">#26C6DA</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="card_border_color">#1FFFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="screen_background">#FCFCFC</color>
+    <color name="separator">#999999</color>
 </resources>

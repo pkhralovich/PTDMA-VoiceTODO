@@ -16,6 +16,7 @@
         android:layout_marginBottom="@dimen/default_spacing">
 
         <TextView
+            android:id="@+id/label_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -29,6 +30,7 @@
             android:layout_marginEnd="@dimen/default_spacing"/>
 
         <TextView
+            android:id="@+id/label_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
 
@@ -94,7 +96,7 @@
             android:layout_height="@dimen/icon_state_size"
             android:layout_marginStart="@dimen/default_spacing"
 
-            android:background="@drawable/ic_completed_last"
+            android:src="@drawable/ic_completed_last"
             android:contentDescription="@string/icon_done"/>
     </LinearLayout>
 </LinearLayout>
