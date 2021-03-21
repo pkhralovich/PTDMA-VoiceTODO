@@ -12,7 +12,7 @@ class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.list_activity)
+        setContentView(R.layout.activity_list)
         ButterKnife.bind(this)
 
         list = getIntent().getSerializableExtra(MainActivity.PARAMS.LIST) as ShoppingList

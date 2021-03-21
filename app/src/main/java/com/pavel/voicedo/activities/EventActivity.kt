@@ -12,7 +12,7 @@ class EventActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.event_activity)
+        setContentView(R.layout.activity_event)
         ButterKnife.bind(this)
 
         event = getIntent().getSerializableExtra(MainActivity.PARAMS.EVENT) as Event

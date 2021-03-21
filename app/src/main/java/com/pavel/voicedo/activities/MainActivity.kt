@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pavel.voicedo.R
 import com.pavel.voicedo.adapters.TodoAdapter
@@ -14,6 +15,10 @@ import com.pavel.voicedo.models.*
 import org.joda.time.DateTime
 
 class MainActivity : AppCompatActivity(), TodoAdapter.Controller{
+    companion object {
+        const val REQUEST_CODE : Int = 100
+    }
+
     @BindView(R.id.recycler_view)
     lateinit var recycler : RecyclerView
     @BindView(R.id.fab)
@@ -50,6 +55,12 @@ class MainActivity : AppCompatActivity(), TodoAdapter.Controller{
             if (dy > 0 && fab.isShown) fab.hide()
             else if (dy < 0 && !fab.isShown) fab.show()
         }
+    }
+
+    @OnClick(R.id.fab)
+    fun onClickFab() {
+        var i = Intent(this, ListenActivity::class.java)
+        startActivityForResult(i, REQUEST_CODE)
     }
 
     override fun onClickItem(item: View) {

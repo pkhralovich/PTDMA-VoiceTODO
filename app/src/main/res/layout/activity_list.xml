@@ -18,6 +18,8 @@
         android:clipChildren="false"
         android:orientation="vertical">
 
+        <include layout="@layout/layout_listener" android:visibility="gone"/>
+
         <TextView
             android:id="@+id/label_description"
             android:layout_width="match_parent"

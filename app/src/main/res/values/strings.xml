@@ -1,5 +1,7 @@
 <resources>
+    <!-- TEXTOS GENERALS -->
     <string name="app_name">Voice Do</string>
+    <string name="cancel">Cancel</string>
 
     <!-- DESCRIPCIO DE LES IMATGES -->
     <string name="icon_micro">Micrófono</string>
@@ -36,4 +38,7 @@
     <!-- ACTIVITY LIST -->
     <string name="label_list_name">List name</string>
     <string name="label_list_items">List items</string>
+
+    <!-- RESPONSE MESSAGES -->
+    <string name="response_how_can_help">Hi! How can I help you?</string>
 </resources>

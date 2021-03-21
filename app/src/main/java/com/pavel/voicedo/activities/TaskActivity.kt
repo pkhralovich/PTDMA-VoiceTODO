@@ -11,7 +11,7 @@ class TaskActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.task_activity)
+        setContentView(R.layout.activity_task)
         ButterKnife.bind(this)
 
         task = getIntent().getSerializableExtra(MainActivity.PARAMS.TASK) as Task
