@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background">
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/app_bar"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/default_spacing"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/label_date"
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_spacing_small"
+                android:paddingStart="@dimen/default_spacing"
+
+                android:textStyle="bold"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/font_small"
+                android:textAllCaps="true"
+
+                android:text="@string/label_event_date"/>
+
+            <EditText
+                android:id="@+id/input_date"
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_spacing_small"
+
+                android:background="@drawable/card_background"
+                android:orientation="vertical"
+                android:elevation="@dimen/card_elevation"
+
+                android:textColor="@color/font_dark"
+                android:textSize="@dimen/font_small"
+                android:text="@string/mock_event_full_date"
+                android:textAllCaps="true"/>
+
+            <EditText
+                android:id="@+id/input_time"
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_spacing_small"
+
+                android:layout_marginBottom="@dimen/default_spacing_small"
+                android:layout_marginStart="@dimen/default_spacing_small"
+                android:background="@drawable/card_background"
+                android:orientation="vertical"
+                android:elevation="@dimen/card_elevation"
+
+                android:textColor="@color/font_dark"
+                android:textSize="@dimen/font_small"
+                android:text="@string/mock_event_time"
+                android:textAllCaps="true"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/label_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_spacing_small"
+            android:paddingStart="@dimen/default_spacing"
+
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/font_small"
+            android:textAllCaps="true"
+
+            android:text="@string/label_event_description"/>
+
+        <EditText
+            android:id="@+id/input_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_spacing"
+
+            android:layout_marginBottom="@dimen/card_spacing"
+            android:background="@drawable/card_background"
+            android:orientation="vertical"
+            android:elevation="@dimen/card_elevation"
+
+            android:textColor="@color/font_dark"
+            android:textSize="@dimen/font_small"
+            android:text="@string/mock_very_long_text"/>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+
+        android:layout_margin="@dimen/fab_margin"
+
+        android:src="@drawable/ic_microphone"
+        android:contentDescription="@string/icon_micro"/>
+</RelativeLayout>

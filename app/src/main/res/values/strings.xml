@@ -20,9 +20,15 @@
     <string name="mock_shopping_list">Butcher list</string>
     <string name="mock_product">Hamburguesa de ternera</string>
     <string name="mock_task_date">23.05.2020 13:00:00</string>
+    <string name="mock_event_time">13:00</string>
+    <string name="mock_event_full_date">23.05.2020</string>
 
     <!-- ACTIVITY TASK -->
     <string name="label_task_description">Task description</string>
     <string name="label_task_state">Task state</string>
     <string name="label_task_date">State date</string>
+
+    <!-- ACTIVITY EVENT -->
+    <string name="label_event_date">Event date</string>
+    <string name="label_event_description">Event description</string>
 </resources>
