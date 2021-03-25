@@ -13,6 +13,7 @@ import com.pavel.voicedo.adapters.TodoAdapter
 import com.pavel.voicedo.models.*
 import org.joda.time.DateTime
 import android.Manifest
+import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import butterknife.OnClick
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -20,9 +21,10 @@ import com.pavel.voicedo.R
 import com.pavel.voicedo.activities.base.ToolbarActivity
 import com.pavel.voicedo.dialogs.MainHelpDialog
 import com.pavel.voicedo.listeners.HideFabOnScrollListener
+import com.pavel.voicedo.voice.Speaker
 
 
-class MainActivity : ToolbarActivity(), TodoAdapter.Controller{
+class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnInitListener {
     class PARAMS {
         companion object {
             const val TASK : String = "TASK"
@@ -43,11 +45,18 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller{
 
     lateinit var list : ArrayList<BaseTask>
 
+    override fun onInit(status: Int) {
+        if (Speaker.onInit(status)) {
+            //TODO: things
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         ButterKnife.bind(this)
+        Speaker.init(this, this)
 
         val products = arrayListOf<Product>(Product("Best product 1", false),
                                             Product("Best product 2", true),
@@ -81,8 +90,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller{
 
     @OnClick(R.id.fab)
     fun onClickListen() {
-        var i = Intent(this, ListenActivity::class.java)
-        startActivityForResult(i, MainActivity.REQUEST_CODE)
+        Speaker.speak("Hello");
     }
 
     @OnClick(R.id.info_icon)
