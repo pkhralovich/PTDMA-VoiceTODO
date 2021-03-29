@@ -29,7 +29,10 @@
 
     <!-- ACTIVITY MAIN -->
     <string name="location_permission_granted">Location permission enabled</string>
-    <string name="location_permission_not_granted">Location permission NOT enabled</string>
+    <string name="location_permission_not_granted">Location permission NOT enabled. You will be unable to check your location.</string>
+    <string name="microphone_permission_granted">Microphone permission enabled</string>
+    <string name="microphone_permission_not_granted">Microphone permission NOT enabled. You will be unable to control the app by voice.</string>
+
     <string name="main_help_actions">Actions</string>
     <string name="main_help_actions_list_1"> Create/delete task </string>
     <string name="main_help_actions_list_2"> Create/delete event </string>

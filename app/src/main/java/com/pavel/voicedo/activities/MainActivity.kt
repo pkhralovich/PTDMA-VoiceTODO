@@ -13,7 +13,6 @@ import com.pavel.voicedo.adapters.TodoAdapter
 import com.pavel.voicedo.models.*
 import org.joda.time.DateTime
 import android.Manifest
-import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import butterknife.OnClick
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,10 +20,9 @@ import com.pavel.voicedo.R
 import com.pavel.voicedo.activities.base.ToolbarActivity
 import com.pavel.voicedo.dialogs.MainHelpDialog
 import com.pavel.voicedo.listeners.HideFabOnScrollListener
-import com.pavel.voicedo.voice.Speaker
 
 
-class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnInitListener {
+class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
     class PARAMS {
         companion object {
             const val TASK : String = "TASK"
@@ -45,18 +43,11 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
 
     lateinit var list : ArrayList<BaseTask>
 
-    override fun onInit(status: Int) {
-        if (Speaker.onInit(status)) {
-            //TODO: things
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         ButterKnife.bind(this)
-        Speaker.init(this, this)
 
         val products = arrayListOf<Product>(Product("Best product 1", false),
                                             Product("Best product 2", true),
@@ -85,12 +76,13 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         recycler.addOnScrollListener(HideFabOnScrollListener(fab))
         recycler.adapter = TodoAdapter(list, this)
 
-        checkLocationPermission()
+        checkPermissions()
     }
 
     @OnClick(R.id.fab)
     fun onClickListen() {
-        Speaker.speak("Hello");
+        val i = Intent(this, ListenActivity::class.java)
+        startActivityForResult(i, REQUEST_CODE)
     }
 
     @OnClick(R.id.info_icon)
@@ -100,7 +92,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
 
     override fun onClickItem(item: View) {
         val itemPosition: Int = recycler.getChildLayoutPosition(item)
-        val task : BaseTask = list.get(itemPosition)
+        val task : BaseTask = list[itemPosition]
 
         when (task.type) {
             BaseTask.eTypes.TASK -> {
@@ -123,40 +115,50 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
     }
 
     //region CHECK_LOCATION_PERMISSION
-    fun checkLocationPermission(): Boolean {
-        val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-        return if (permission != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(
+    private fun checkPermissions() {
+        val permissionLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionMicrophone = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+
+        val permissions : ArrayList<String> = ArrayList()
+        if (permissionLocation != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (permissionMicrophone != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.RECORD_AUDIO)
+
+        if (permissions.size > 0) {
+            ActivityCompat.requestPermissions(
                     this@MainActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    permissions.toTypedArray(),
                     PERMISSION_REQUEST_LOCATION
-                )
-            } else {
-                ActivityCompat.requestPermissions(
-                    this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    PERMISSION_REQUEST_LOCATION
-                )
-            }
-            false
-        } else true
+            )
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             PERMISSION_REQUEST_LOCATION -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    if (permission == PackageManager.PERMISSION_GRANTED) {
-                        val toast = Toast.makeText(this, R.string.location_permission_granted, Toast.LENGTH_LONG)
-                        toast.show()
+                if (permissions.isNotEmpty()) {
+                    for ((index, permission: String) in permissions.withIndex()) {
+                        when (permission) {
+                            Manifest.permission.ACCESS_FINE_LOCATION -> onLocationPermission(grantResults[index])
+                            Manifest.permission.RECORD_AUDIO -> onAudioPermission(grantResults[index])
+                        }
                     }
-                } else {
-                    val toast = Toast.makeText(this, R.string.location_permission_not_granted, Toast.LENGTH_LONG)
-                    toast.show()
                 }
             }
         }
+    }
+
+    private fun onLocationPermission(result: Int) {
+        if (result == PackageManager.PERMISSION_GRANTED)
+            Toast.makeText(this, R.string.location_permission_granted, Toast.LENGTH_LONG).show()
+        else
+            Toast.makeText(this, R.string.location_permission_not_granted, Toast.LENGTH_LONG).show()
+    }
+
+    private fun onAudioPermission(result: Int) {
+        if (result == PackageManager.PERMISSION_GRANTED)
+            Toast.makeText(this, R.string.microphone_permission_granted, Toast.LENGTH_LONG).show()
+        else
+            Toast.makeText(this, R.string.microphone_permission_not_granted, Toast.LENGTH_LONG).show()
     }
     //endregion
 }
