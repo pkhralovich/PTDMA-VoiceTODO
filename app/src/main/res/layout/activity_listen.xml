@@ -15,6 +15,7 @@
         android:gravity="center">
 
         <LinearLayout
+            android:id="@+id/microphone_container"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="@drawable/circle_primary"
@@ -39,9 +40,11 @@
         android:gravity="center">
 
         <ImageView
+            android:id="@+id/icon_waves"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:scaleY="0.5"
 
             android:gravity="center"
             android:src="@drawable/ic_speaker"/>

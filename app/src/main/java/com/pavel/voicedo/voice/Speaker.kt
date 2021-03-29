@@ -24,7 +24,7 @@ class Speaker {
                     return false
                 }
                 return true
-            } else Log.e("TTS", "Unable to initialize speaker")
+            } else Log.e("TTS", "Unable to initialize speaker - ErrorCode: $status")
             return false
         }
 

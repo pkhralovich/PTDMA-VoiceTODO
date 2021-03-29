@@ -60,6 +60,10 @@
     <string name="state_todo">PENDING</string>
     <string name="state_doing">DOING</string>
     <string name="state_done">DONE</string>
+    <string name="remove_task_help">Say "remove task" to remove the current task</string>
+    <string name="edit_task_name_help">Say "edit name" to enter a new name for this task</string>
+    <string name="edit_task_state_help">Say "edit state" to enter a new state for this task</string>
+    <string name="edit_task_back_help">Say "back" to return to the previous page</string>
 
     <!-- ACTIVITY EVENT -->
     <string name="label_event_date">Event date</string>
@@ -67,7 +71,7 @@
     <string name="remove_event_help">Say "remove event" to remove the current event</string>
     <string name="edit_event_name_help">Say "edit name" to enter a new name for this event</string>
     <string name="edit_event_date_help">Say "edit date" to enter a new date for this event</string>
-    <string name="edit_event_back_help">Say "back" to close the current event</string>
+    <string name="edit_event_back_help">Say "back" to return to the previous page</string>
 
     <!-- ACTIVITY LIST -->
     <string name="label_list_name">List name</string>
@@ -79,8 +83,4 @@
 
     <!-- RESPONSE MESSAGES -->
     <string name="response_how_can_help">Hi! How can I help you?</string>
-    <string name="remove_task_help">Say "remove task" to remove the current task</string>
-    <string name="edit_task_name_help">Say "edit name" to enter a new name for this task</string>
-    <string name="edit_task_state_help">Say "edit state" to enter a new state for this task</string>
-    <string name="edit_task_back_help">Say "back" to return to the previous page</string>
 </resources>
