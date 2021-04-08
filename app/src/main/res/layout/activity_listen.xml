@@ -23,9 +23,10 @@
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/microphone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_microphone"
+                android:src="@drawable/ic_microphone_disabled"
                 android:contentDescription="@string/icon_micro"
                 android:padding="@dimen/default_spacing"/>
         </LinearLayout>

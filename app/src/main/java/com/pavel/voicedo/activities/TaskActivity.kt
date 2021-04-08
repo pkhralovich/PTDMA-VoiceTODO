@@ -9,6 +9,7 @@ import com.pavel.voicedo.activities.base.ListenableActivity
 import com.pavel.voicedo.adapters.TodoAdapter
 import com.pavel.voicedo.listeners.HideFabOnScrollListener
 import com.pavel.voicedo.models.Task
+import com.pavel.voicedo.voice.ActionParser
 
 class TaskActivity : ListenableActivity() {
     lateinit var task : Task
@@ -37,6 +38,10 @@ class TaskActivity : ListenableActivity() {
             else -> { }
         }
         return list
+    }
+
+    override fun onResult(action: ActionParser.Action) {
+        TODO("Not yet implemented")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

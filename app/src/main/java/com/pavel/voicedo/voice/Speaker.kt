@@ -3,6 +3,7 @@ package com.pavel.voicedo.voice
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.*
+import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import java.util.*
 
@@ -11,14 +12,15 @@ class Speaker {
         private lateinit var m_instance : TextToSpeech
         private lateinit var m_context: Context
 
-        fun init(activity: Context, listener: OnInitListener) {
+        fun init(activity: Context, listener: OnInitListener, progressListener: UtteranceProgressListener ) {
             m_instance = TextToSpeech(activity, listener)
+            m_instance.setOnUtteranceProgressListener(progressListener)
             m_context = activity
         }
 
         fun onInit(status: Int) : Boolean {
             if (status == SUCCESS) {
-                val result = m_instance!!.setLanguage(Locale.US)
+                val result = m_instance.setLanguage(Locale.US)
                 if (result == LANG_MISSING_DATA || result == LANG_NOT_SUPPORTED) {
                     Log.e("TTS", "Language not supported")
                     return false
@@ -29,7 +31,7 @@ class Speaker {
         }
 
         fun speak(text: String) {
-            m_instance.speak(text, TextToSpeech.QUEUE_FLUSH, null, this::class.java.name)
+            m_instance.speak(text, QUEUE_FLUSH, null, this::class.java.name)
         }
 
         fun speak(text: Int) {

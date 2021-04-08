@@ -7,6 +7,7 @@ import butterknife.ButterKnife
 import com.pavel.voicedo.R
 import com.pavel.voicedo.activities.base.ListenableActivity
 import com.pavel.voicedo.models.Event
+import com.pavel.voicedo.voice.ActionParser
 
 class EventActivity : ListenableActivity() {
     lateinit var event : Event
@@ -35,6 +36,10 @@ class EventActivity : ListenableActivity() {
             else -> { }
         }
         return list;
+    }
+
+    override fun onResult(action: ActionParser.Action) {
+        TODO("Not yet implemented")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

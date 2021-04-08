@@ -20,6 +20,7 @@ import com.pavel.voicedo.R
 import com.pavel.voicedo.activities.base.ToolbarActivity
 import com.pavel.voicedo.dialogs.MainHelpDialog
 import com.pavel.voicedo.listeners.HideFabOnScrollListener
+import com.pavel.voicedo.voice.ActionParser
 
 
 class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
@@ -34,6 +35,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
     companion object {
         const val REQUEST_CODE : Int = 100
         const val PERMISSION_REQUEST_LOCATION = 99
+        const val PARAM_ACTION = "action"
     }
 
     @BindView(R.id.recycler_view)
@@ -83,6 +85,36 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
     fun onClickListen() {
         val i = Intent(this, ListenActivity::class.java)
         startActivityForResult(i, REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE) {
+            if (data != null) {
+                val action : ActionParser.Action = data!!.getSerializableExtra(PARAM_ACTION) as ActionParser.Action
+                onResult(action)
+            }
+        }
+    }
+
+    fun onResult(action: ActionParser.Action) {
+        when (action.action) {
+            ActionParser.Action.eActionType.NOT_UNDERSTAND -> notUnderstand()
+            ActionParser.Action.eActionType.VIEW_TASK -> viewTask(action.param!!)
+            ActionParser.Action.eActionType.CREATE_TASK -> createTask()
+        }
+    }
+
+    fun notUnderstand() {
+        val i = 0
+    }
+
+    fun createTask() {
+        val i = 0
+    }
+
+    fun viewTask(task: String) {
+        val i = 0
     }
 
     @OnClick(R.id.info_icon)

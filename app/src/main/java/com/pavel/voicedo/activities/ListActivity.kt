@@ -11,6 +11,7 @@ import com.pavel.voicedo.adapters.ProductAdapter
 import com.pavel.voicedo.adapters.TodoAdapter
 import com.pavel.voicedo.listeners.HideFabOnScrollListener
 import com.pavel.voicedo.models.ShoppingList
+import com.pavel.voicedo.voice.ActionParser
 
 class ListActivity : ListenableActivity() {
     lateinit var list : ShoppingList
@@ -37,6 +38,10 @@ class ListActivity : ListenableActivity() {
             else -> { }
         }
         return list
+    }
+
+    override fun onResult(action: ActionParser.Action) {
+        TODO("Not yet implemented")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
