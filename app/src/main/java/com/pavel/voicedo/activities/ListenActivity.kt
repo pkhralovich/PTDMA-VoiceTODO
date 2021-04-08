@@ -124,10 +124,18 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         stopListening()
 
-        val resultIntent = Intent()
-        resultIntent.putExtra(MainActivity.PARAM_ACTION, ActionParser.parse(message))
-        setResult(RESULT_OK, resultIntent)
-        finish()
+        val action = ActionParser.parse(message)
+        if (action.action == ActionParser.Action.eActionType.NOT_UNDERSTAND) onInvalidAction()
+        else {
+            val resultIntent = Intent()
+            resultIntent.putExtra(MainActivity.PARAM_ACTION, action)
+            setResult(RESULT_OK, resultIntent)
+            finish()
+        }
+    }
+
+    fun onInvalidAction() {
+        Speaker.speak(R.string.response_not_unserstand)
     }
 
     override fun onPartialResults(partialResults: Bundle?) {

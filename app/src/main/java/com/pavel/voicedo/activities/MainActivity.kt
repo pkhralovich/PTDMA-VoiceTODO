@@ -13,6 +13,8 @@ import com.pavel.voicedo.adapters.TodoAdapter
 import com.pavel.voicedo.models.*
 import org.joda.time.DateTime
 import android.Manifest
+import android.os.Debug
+import android.util.Log
 import android.widget.Toast
 import butterknife.OnClick
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -114,7 +116,13 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
     }
 
     fun viewTask(task: String) {
-        val i = 0
+        /*var task_id : String = ""
+        try {
+            task_id =
+        } catch (e: Exception) {
+            Log.d("MainActivity", "Error parsing task ID")
+        }*/
+
     }
 
     @OnClick(R.id.info_icon)

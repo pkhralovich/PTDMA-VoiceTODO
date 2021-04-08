@@ -83,4 +83,5 @@
 
     <!-- RESPONSE MESSAGES -->
     <string name="response_how_can_help">Hi! How can I help you?</string>
+    <string name="response_not_unserstand">I\'m not able to understand you. Please, repeat the order.</string>
 </resources>

@@ -23,9 +23,9 @@ class ActionParser {
 
     companion object {
         //TASKS PATTERNS
-        private val VIEW_TASK_PATTERN = "((view|show) task).*";
-        private val CREATE_TASK_PATTERN = "((create|new|insert) task).*"
-        private val DELETE_TASK_PATTERN = "((delete|remove|clear) task).*"
+        private val VIEW_TASK_PATTERN = "((view|show) task)(.*)";
+        private val CREATE_TASK_PATTERN = "((create|new|insert) task)(.*)"
+        private val DELETE_TASK_PATTERN = "((delete|remove|clear) task)(.*)"
         //END TASKS PATTERNS
 
 
@@ -54,8 +54,9 @@ class ActionParser {
         private fun getAction(action_type: Action.eActionType, action: String, pattern: String, hasParams : Boolean = false) : Action {
             val compiledPattern = Pattern.compile(pattern)
             val matcher = compiledPattern.matcher(action)
+            matcher.matches()
 
-            if (hasParams) return Action(action_type, matcher.group(1))
+            if (hasParams) return Action(action_type, matcher.group(matcher.groupCount()).trim())
             else return Action(action_type, "")
         }
     }
