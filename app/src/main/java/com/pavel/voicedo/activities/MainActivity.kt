@@ -14,6 +14,7 @@ import com.pavel.voicedo.models.*
 import org.joda.time.DateTime
 import android.Manifest
 import android.os.Debug
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.Toast
 import butterknife.OnClick
@@ -23,9 +24,10 @@ import com.pavel.voicedo.activities.base.ToolbarActivity
 import com.pavel.voicedo.dialogs.MainHelpDialog
 import com.pavel.voicedo.listeners.HideFabOnScrollListener
 import com.pavel.voicedo.voice.ActionParser
+import com.pavel.voicedo.voice.Speaker
 
 
-class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
+class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnInitListener {
     class PARAMS {
         companion object {
             const val TASK : String = "TASK"
@@ -53,7 +55,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
 
         ButterKnife.bind(this)
 
-        val products = arrayListOf<Product>(Product("Best product 1", false),
+        val products = arrayListOf(Product("Best product 1", false),
                                             Product("Best product 2", true),
                                             Product("Best product 3", true),
                                             Product("Best product 4", false),
@@ -63,6 +65,8 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
                                             Product("Best product 8", true),
                                             Product("Best product 9", false),
                                             Product("Best product 10", true))
+
+        Speaker.init(this, this)
 
         list = arrayListOf()
         list.add(Event(1, "Event test 1", DateTime.now()))
@@ -93,37 +97,107 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE) {
             if (data != null) {
-                val action : ActionParser.Action = data!!.getSerializableExtra(PARAM_ACTION) as ActionParser.Action
-                onResult(action)
+                var action : ActionParser.Action? = null;
+                if (data.hasExtra(PARAM_ACTION)) action = data.getSerializableExtra(PARAM_ACTION) as ActionParser.Action
+
+                if (action != null) onResult(action)
             }
         }
     }
 
     fun onResult(action: ActionParser.Action) {
         when (action.action) {
-            ActionParser.Action.eActionType.NOT_UNDERSTAND -> notUnderstand()
+            ActionParser.Action.eActionType.HELP -> onClickHelp()
             ActionParser.Action.eActionType.VIEW_TASK -> viewTask(action.param!!)
+            ActionParser.Action.eActionType.DELETE_TASK -> deleteTask(action.param!!)
             ActionParser.Action.eActionType.CREATE_TASK -> createTask()
+            ActionParser.Action.eActionType.VIEW_EVENT -> viewEvent(action.param!!)
+            ActionParser.Action.eActionType.DELETE_EVENT -> deleteEvent(action.param!!)
+            ActionParser.Action.eActionType.CREATE_EVENT -> createEvent()
+            ActionParser.Action.eActionType.VIEW_LIST -> viewList(action.param!!)
+            ActionParser.Action.eActionType.DELETE_LIST -> deleteList(action.param!!)
+            ActionParser.Action.eActionType.CREATE_LIST -> createList()
+            ActionParser.Action.eActionType.CANCELATION -> {}
+            else -> Speaker.speak(R.string.response_not_unserstand)
         }
     }
 
-    fun notUnderstand() {
-        val i = 0
+    private fun createList() {
+        Speaker.speak(R.string.response_creating_list)
+        openList(null)
     }
 
-    fun createTask() {
-        val i = 0
+    private fun createTask() {
+        Speaker.speak(R.string.response_creating_task)
+        openTask(null)
     }
 
-    fun viewTask(task: String) {
-        /*var task_id : String = ""
-        try {
-            task_id =
-        } catch (e: Exception) {
-            Log.d("MainActivity", "Error parsing task ID")
-        }*/
-
+    private fun createEvent() {
+        Speaker.speak(R.string.response_creating_event)
+        openEvent(null)
     }
+
+    private fun viewTask(task_id: String) {
+        val task : Task? = BaseTask.getTask(list, task_id)
+
+        if (task == null) Speaker.speak(R.string.response_task_not_found)
+        else {
+            Speaker.speak(resources.getString(R.string.response_opening_task, task_id))
+            openTask(task)
+        }
+    }
+
+    private fun deleteTask(list_id: String) {
+        val event : ShoppingList? = BaseTask.getList(list, list_id)
+
+        if (event == null) Speaker.speak(R.string.response_list_not_found)
+        else {
+            //TODO: Fisical remove
+            Speaker.speak(R.string.response_removing_list)
+        }
+    }
+
+    private fun viewEvent(event_id: String) {
+        val event : Event? = BaseTask.getEvent(list, event_id)
+
+        if (event == null) Speaker.speak(R.string.response_event_not_found)
+        else {
+            Speaker.speak(resources.getString(R.string.response_opening_event, event_id))
+            openEvent(event)
+        }
+    }
+
+    private fun deleteEvent(event_id: String) {
+        val event : Event? = BaseTask.getEvent(list, event_id)
+
+        if (event == null) Speaker.speak(R.string.response_event_not_found)
+        else {
+            //TODO: Fisical remove
+            Speaker.speak(R.string.response_removing_event)
+        }
+    }
+
+    private fun viewList(list_id: String) {
+        val list : ShoppingList? = BaseTask.getList(list, list_id)
+
+        if (list == null) Speaker.speak(R.string.response_list_not_found)
+        else {
+            Speaker.speak(resources.getString(R.string.response_opening_list, list_id))
+            openList(list)
+        }
+    }
+
+    private fun deleteList(list_id: String) {
+        val list : ShoppingList? = BaseTask.getList(list, list_id)
+
+        if (list == null) Speaker.speak(R.string.response_list_not_found)
+        else {
+            //TODO: Fisical remove
+            Speaker.speak(R.string.response_removing_list)
+        }
+    }
+
+    override fun onInit(status: Int) { }
 
     @OnClick(R.id.info_icon)
     fun onClickHelp() {
@@ -135,23 +209,35 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller {
         val task : BaseTask = list[itemPosition]
 
         when (task.type) {
-            BaseTask.eTypes.TASK -> {
-                val intent = Intent(this, TaskActivity::class.java)
-                intent.putExtra(PARAMS.TASK, task as Task)
-                startActivity(intent)
-            }
-            BaseTask.eTypes.EVENT -> {
-                val intent = Intent(this, EventActivity::class.java)
-                intent.putExtra(PARAMS.EVENT, task as Event)
-                startActivity(intent)
-            }
-            BaseTask.eTypes.LIST -> {
-                val intent = Intent(this, ListActivity::class.java)
-                intent.putExtra(PARAMS.LIST, task as ShoppingList)
-                startActivity(intent)
-            }
+            BaseTask.eTypes.TASK -> openTask(task as Task)
+            BaseTask.eTypes.EVENT -> openEvent(task as Event)
+            BaseTask.eTypes.LIST -> openList(task as ShoppingList)
             else -> { }
         }
+    }
+
+    private fun openTask(task: Task?) {
+        val intent = Intent(this, TaskActivity::class.java)
+
+        if (task != null) intent.putExtra(PARAMS.TASK, task)
+
+        startActivity(intent)
+    }
+
+    private fun openEvent(event: Event?) {
+        val intent = Intent(this, EventActivity::class.java)
+
+        if (event != null) intent.putExtra(PARAMS.EVENT, event)
+
+        startActivity(intent)
+    }
+
+    private fun openList(list: ShoppingList?) {
+        val intent = Intent(this, ListActivity::class.java)
+
+        if (list != null) intent.putExtra(PARAMS.LIST, list)
+
+        startActivity(intent)
     }
 
     //region CHECK_LOCATION_PERMISSION

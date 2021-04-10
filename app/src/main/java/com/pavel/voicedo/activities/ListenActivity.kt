@@ -16,6 +16,7 @@ import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import butterknife.Action
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
@@ -28,14 +29,23 @@ import java.util.*
 class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, RecognitionListener  {
     companion object {
         private const val TAG = "ListenActivity"
+
+        enum class eStatusType {
+            WAITING_COMMAND,
+            WAITING_REMOVE_LIST,
+            WAITING_REMOVE_TASK,
+            WAITING_REMOVE_EVENT
+        }
     }
 
     @BindView(R.id.icon_waves)
     lateinit var icon_waves: View
     @BindView(R.id.microphone)
     lateinit var icon_micro: ImageView
-
     lateinit var speechRecognizer: SpeechRecognizer
+
+    var status : eStatusType = eStatusType.WAITING_COMMAND
+    var previous_action : ActionParser.Action? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,10 +137,46 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         val action = ActionParser.parse(message)
         if (action.action == ActionParser.Action.eActionType.NOT_UNDERSTAND) onInvalidAction()
         else {
-            val resultIntent = Intent()
-            resultIntent.putExtra(MainActivity.PARAM_ACTION, action)
-            setResult(RESULT_OK, resultIntent)
-            finish()
+            when (this.status) {
+                eStatusType.WAITING_COMMAND -> applyCommand(action)
+                else -> {
+                    if (action.action == ActionParser.Action.eActionType.CONFIRMATION) {
+                        val resultIntent = Intent()
+                        resultIntent.putExtra(MainActivity.PARAM_ACTION, this.previous_action)
+                        setResult(RESULT_OK, resultIntent)
+                        finish()
+                    } else {
+                        Speaker.speak(R.string.response_remove_canceled)
+                        finish()
+                    }
+                }
+            }
+        }
+    }
+
+    fun applyCommand(action: ActionParser.Action) {
+        when (action.action) {
+            ActionParser.Action.eActionType.DELETE_TASK -> {
+                this.status = eStatusType.WAITING_REMOVE_TASK
+                this.previous_action = action
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_task, action.param))
+            }
+            ActionParser.Action.eActionType.DELETE_LIST -> {
+                this.status = eStatusType.WAITING_REMOVE_LIST
+                this.previous_action = action
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_list, action.param))
+            }
+            ActionParser.Action.eActionType.DELETE_EVENT -> {
+                this.status = eStatusType.WAITING_REMOVE_EVENT
+                this.previous_action = action
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_event, action.param))
+            }
+            else -> {
+                val resultIntent = Intent()
+                resultIntent.putExtra(MainActivity.PARAM_ACTION, action)
+                setResult(RESULT_OK, resultIntent)
+                finish()
+            }
         }
     }
 
@@ -147,14 +193,18 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
     }
 
     fun startListening() {
-        Handler(Looper.getMainLooper()).post {
+        Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en")
+            intent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, true)
+
             intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.pavel.voicedo")
 
             speechRecognizer.startListening(intent)
             icon_micro.setImageResource(R.drawable.ic_microphone)
-        }
+        }, 250)
     }
 
     fun stopListening() {

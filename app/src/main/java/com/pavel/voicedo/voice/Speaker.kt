@@ -18,6 +18,11 @@ class Speaker {
             m_context = activity
         }
 
+        fun init(activity: Context, listener: OnInitListener) {
+            m_instance = TextToSpeech(activity, listener)
+            m_context = activity
+        }
+
         fun onInit(status: Int) : Boolean {
             if (status == SUCCESS) {
                 val result = m_instance.setLanguage(Locale.US)

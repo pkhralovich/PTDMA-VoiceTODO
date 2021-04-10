@@ -84,4 +84,20 @@
     <!-- RESPONSE MESSAGES -->
     <string name="response_how_can_help">Hi! How can I help you?</string>
     <string name="response_not_unserstand">I\'m not able to understand you. Please, repeat the order.</string>
+    <string name="response_task_not_found">Task not found</string>
+    <string name="response_event_not_found">Event not found</string>
+    <string name="response_list_not_found">List not found</string>
+    <string name="response_confirm_remove_task">Are you sure you want to remove the task %1$s?</string>
+    <string name="response_confirm_remove_list">Are you sure you want to remove the list %1$s?</string>
+    <string name="response_confirm_remove_event">Are you sure you want to remove the event %1$s?</string>
+    <string name="response_remove_canceled">Element not removed</string>
+    <string name="response_removing_task">Removing task</string>
+    <string name="response_removing_event">Removing event</string>
+    <string name="response_removing_list">Removing list</string>
+    <string name="response_creating_task">Creating task</string>
+    <string name="response_creating_event">Creating event</string>
+    <string name="response_creating_list">Creating list</string>
+    <string name="response_opening_event">Showing event %1$s</string>
+    <string name="response_opening_list">Showing list %1$s</string>
+    <string name="response_opening_task">Showing task %1$s</string>
 </resources>
