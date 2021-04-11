@@ -3,6 +3,7 @@ package com.pavel.voicedo.models
 import android.content.Context
 import com.pavel.voicedo.R
 import org.joda.time.DateTime
+import java.util.*
 
 class Task : BaseTask {
     enum class eTaskState {
@@ -10,9 +11,18 @@ class Task : BaseTask {
     }
 
     var state : eTaskState
-    var state_date : DateTime = DateTime.now()
+    var state_date : Date = Date()
 
-    constructor(id: Int, description: String, state: eTaskState) : super(id, eTypes.TASK, description) {
+    constructor() {
+        state = eTaskState.UNDEFINED
+        state_date = DateTime.now().toDate()
+    }
+
+    /*constructor(id: Long, description: String, state: eTaskState) : super(id, eTypes.TASK, description) {
+        this.state = state
+    }*/
+
+    constructor(description: String, state: eTaskState) : super(eTypes.TASK, description) {
         this.state = state
     }
 
@@ -26,6 +36,6 @@ class Task : BaseTask {
     }
 
     fun getStringDate() : String {
-        return this.state_date.toString("dd.MM.YYYY HH:mm:ss")
+        return DateTime(state_date).toString("dd.MM.YYYY HH:mm:ss")
     }
 }

@@ -1,23 +1,28 @@
 package com.pavel.voicedo.models
 
 import org.joda.time.DateTime
+import java.util.*
 
 class Event : BaseTask {
-    var date: DateTime
+    var date: Date
 
-    constructor (id: Int, description: String, date: DateTime) : super(id, eTypes.EVENT, description) {
-        this.date = date;
+    constructor() {
+        this.date = Date()
+    }
+
+    constructor (description: String, date: DateTime) : super(eTypes.EVENT, description) {
+        this.date = date.toDate()
     }
 
     fun getStringDate(): String {
-        return "${date.toString("dd")}\n${date.toString("MMM")}"
+        return "${DateTime(date).toString("dd")}\n${DateTime(date).toString("MMM")}"
     }
 
     fun getStringLongDate() : String {
-        return date.toString("dd.MM.YYYY")
+        return DateTime(date).toString("dd.MM.YYYY")
     }
 
     fun getStringTime() : String {
-        return date.toString("HH:mm")
+        return DateTime(date).toString("HH:mm")
     }
 }

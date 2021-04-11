@@ -5,6 +5,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.*
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
+import android.widget.TextView
 import java.util.*
 
 class Speaker {
@@ -35,12 +36,13 @@ class Speaker {
             return false
         }
 
-        fun speak(text: String) {
+        fun speak(text: String, view: TextView?) {
             m_instance.speak(text, QUEUE_FLUSH, null, this::class.java.name)
+            if (view != null) view.text = text
         }
 
-        fun speak(text: Int) {
-            speak(m_context.resources.getString(text))
+        fun speak(text: Int, view: TextView?) {
+            speak(m_context.resources.getString(text), view)
         }
 
         fun destroy() {

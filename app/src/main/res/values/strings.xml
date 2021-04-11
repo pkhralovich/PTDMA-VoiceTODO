@@ -100,4 +100,6 @@
     <string name="response_opening_event">Showing event %1$s</string>
     <string name="response_opening_list">Showing list %1$s</string>
     <string name="response_opening_task">Showing task %1$s</string>
+
+    <string name="no_location_detected">No location available</string>
 </resources>

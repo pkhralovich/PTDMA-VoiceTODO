@@ -14,6 +14,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.Action
@@ -42,6 +43,9 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
     lateinit var icon_waves: View
     @BindView(R.id.microphone)
     lateinit var icon_micro: ImageView
+    @BindView(R.id.text_indicator)
+    lateinit var text_indicator: TextView
+
     lateinit var speechRecognizer: SpeechRecognizer
 
     var status : eStatusType = eStatusType.WAITING_COMMAND
@@ -85,7 +89,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
 
     override fun onInit(status: Int) {
         if (Speaker.onInit(status)) {
-            Speaker.speak(R.string.response_how_can_help)
+            Speaker.speak(R.string.response_how_can_help, text_indicator)
         }
     }
 
@@ -121,6 +125,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
 
     override fun onError(error: Int) {
         Log.d(TAG, "onError: $error")
+        if (error != 5) startListening()
     }
 
     override fun onResults(results: Bundle?) {
@@ -146,7 +151,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
                         setResult(RESULT_OK, resultIntent)
                         finish()
                     } else {
-                        Speaker.speak(R.string.response_remove_canceled)
+                        Speaker.speak(R.string.response_remove_canceled, text_indicator)
                         finish()
                     }
                 }
@@ -159,17 +164,17 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
             ActionParser.Action.eActionType.DELETE_TASK -> {
                 this.status = eStatusType.WAITING_REMOVE_TASK
                 this.previous_action = action
-                Speaker.speak(resources.getString(R.string.response_confirm_remove_task, action.param))
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_task, action.param), text_indicator)
             }
             ActionParser.Action.eActionType.DELETE_LIST -> {
                 this.status = eStatusType.WAITING_REMOVE_LIST
                 this.previous_action = action
-                Speaker.speak(resources.getString(R.string.response_confirm_remove_list, action.param))
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_list, action.param), text_indicator)
             }
             ActionParser.Action.eActionType.DELETE_EVENT -> {
                 this.status = eStatusType.WAITING_REMOVE_EVENT
                 this.previous_action = action
-                Speaker.speak(resources.getString(R.string.response_confirm_remove_event, action.param))
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_event, action.param), text_indicator)
             }
             else -> {
                 val resultIntent = Intent()
@@ -181,7 +186,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
     }
 
     fun onInvalidAction() {
-        Speaker.speak(R.string.response_not_unserstand)
+        Speaker.speak(R.string.response_not_unserstand, text_indicator)
     }
 
     override fun onPartialResults(partialResults: Bundle?) {
@@ -204,7 +209,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
 
             speechRecognizer.startListening(intent)
             icon_micro.setImageResource(R.drawable.ic_microphone)
-        }, 250)
+        }, 50)
     }
 
     fun stopListening() {

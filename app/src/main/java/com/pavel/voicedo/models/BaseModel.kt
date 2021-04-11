@@ -1,15 +1,9 @@
 package com.pavel.voicedo.models
 
+import com.orm.SugarRecord
 import java.io.Serializable
+import java.util.*
 
-abstract class BaseModel : Serializable {
-    var id: Int
-
-    constructor() {
-        id = -1
-    }
-
-    constructor(id: Int) {
-        this.id = id
-    }
+abstract class BaseModel : SugarRecord(), Serializable {
+    var creationDate : Date = Date()
 }

@@ -21,7 +21,7 @@ class TodoAdapter(_data: List<BaseTask>, _controller: Controller) : RecyclerView
         fun onClickItem(item: View)
     }
 
-    private val data : List<BaseTask> = _data
+    public var data : List<BaseTask> = _data
     private val controller: Controller = _controller
 
     override fun getItemViewType(position: Int): Int {

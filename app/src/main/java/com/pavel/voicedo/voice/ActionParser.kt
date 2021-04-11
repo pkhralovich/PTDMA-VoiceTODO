@@ -40,6 +40,15 @@ class ActionParser {
 
         //QUERIES AND HELP PATTERNS
         private val HELP_PATTERN = "(help|((show|view) help))(.*)"
+        private val SHOW_ALL_TASKS_PATTERN = "((show|view) all (tasks|task))(.*)"
+        private val SHOW_ALL_EVENTS_PATTERN = "((show|view) all (events|event))(.*)"
+        private val SHOW_ALL_LISTS_PATTERN = "((show|view) all (lists|list))(.*)"
+        private val SHOW_UNDONE_TASKS_PATTERN = "((show|view)( all)? undone (tasks|task))(.*)"
+        private val SHOW_TASKS_IN_PROCESS_PATTERN = "((show|view)( all)? (tasks|task) in (process|progress))(.*)"
+        private val SHOW_EVENTS_DAY_PATTERN = "((show|view) (events|event) on)(.*)"
+        private val SHOW_EVENTS_CURRENT_WEEK_PATTERN = "((show|view) (events|event) this week)(.*)"
+        private val SHOW_EVENTS_NEXT_WEEK_PATTERN = "((show|view) (events|event) tomorrow)(.*)"
+        private val SHOW_LOCATION_PATTERN = "((view|show)( my)? location)(.*)"
         //END QUERIES AND HELP PATTERNS
 
         //INPUT PATTERNS
@@ -48,19 +57,33 @@ class ActionParser {
         //END INPUT PATTERNS
 
         fun parse(action: String) : Action {
-            var action = "delete event one"
+            //var action = "delete event one"
 
             return when {
+                //QUERIES
+                matches(action, SHOW_ALL_TASKS_PATTERN) -> getAction(Action.eActionType.SHOW_ALL_TASKS, action, SHOW_ALL_TASKS_PATTERN)
+                matches(action, SHOW_ALL_EVENTS_PATTERN) -> getAction(Action.eActionType.SHOW_ALL_EVENTS, action, SHOW_ALL_EVENTS_PATTERN)
+                matches(action, SHOW_ALL_LISTS_PATTERN) -> getAction(Action.eActionType.SHOW_ALL_LISTS, action, SHOW_ALL_LISTS_PATTERN)
+                matches(action, SHOW_UNDONE_TASKS_PATTERN) -> getAction(Action.eActionType.SHOW_UNDONE_TASKS, action, SHOW_UNDONE_TASKS_PATTERN)
+                matches(action, SHOW_TASKS_IN_PROCESS_PATTERN) -> getAction(Action.eActionType.SHOW_TASKS_IN_PROCESS, action, SHOW_TASKS_IN_PROCESS_PATTERN)
+                matches(action, SHOW_EVENTS_DAY_PATTERN) -> getAction(Action.eActionType.SHOW_EVENTS_DAY, action, SHOW_EVENTS_DAY_PATTERN)
+                matches(action, SHOW_EVENTS_CURRENT_WEEK_PATTERN) -> getAction(Action.eActionType.SHOW_EVENTS_CURRENT_WEEK, action, SHOW_EVENTS_CURRENT_WEEK_PATTERN)
+                matches(action, SHOW_EVENTS_NEXT_WEEK_PATTERN) -> getAction(Action.eActionType.SHOW_EVENTS_NEXT_WEEK, action, SHOW_EVENTS_NEXT_WEEK_PATTERN)
+                matches(action, SHOW_LOCATION_PATTERN) -> getAction(Action.eActionType.SHOW_LOCATION, action, SHOW_LOCATION_PATTERN)
+                matches(action, HELP_PATTERN) -> getAction(Action.eActionType.HELP, action, HELP_PATTERN)
+                //TASKS
                 matches(action, VIEW_TASK_PATTERN) -> getAction(Action.eActionType.VIEW_TASK, action, VIEW_TASK_PATTERN, true)
                 matches(action, DELETE_TASK_PATTERN) -> getAction(Action.eActionType.DELETE_TASK, action, DELETE_TASK_PATTERN, true)
                 matches(action, CREATE_TASK_PATTERN) -> getAction(Action.eActionType.CREATE_TASK, action, CREATE_TASK_PATTERN)
+                //EVENTS
                 matches(action, VIEW_EVENT_PATTERN) -> getAction(Action.eActionType.VIEW_EVENT, action, VIEW_EVENT_PATTERN, true)
                 matches(action, DELETE_EVENT_PATTERN) -> getAction(Action.eActionType.DELETE_EVENT, action, DELETE_EVENT_PATTERN, true)
                 matches(action, CREATE_EVENT_PATTERN) -> getAction(Action.eActionType.CREATE_EVENT, action, CREATE_EVENT_PATTERN)
+                //LISTS
                 matches(action, VIEW_LIST_PATTERN) -> getAction(Action.eActionType.VIEW_LIST, action, VIEW_LIST_PATTERN, true)
                 matches(action, DELETE_LIST_PATTERN) -> getAction(Action.eActionType.DELETE_LIST, action, DELETE_LIST_PATTERN, true)
                 matches(action, CREATE_LIST_PATTERN) -> getAction(Action.eActionType.CREATE_LIST, action, CREATE_LIST_PATTERN)
-                matches(action, HELP_PATTERN) -> getAction(Action.eActionType.HELP, action, HELP_PATTERN)
+                //INPUT
                 matches(action, CONFIRM_PATTERN) -> getAction(Action.eActionType.CONFIRMATION, action, CONFIRM_PATTERN)
                 matches(action, CANCEL_PATTERN) -> getAction(Action.eActionType.CANCELATION, action, CANCEL_PATTERN)
                 else -> Action(Action.eActionType.NOT_UNDERSTAND, "")
@@ -78,7 +101,7 @@ class ActionParser {
             val matcher = compiledPattern.matcher(action.toLowerCase(Locale.ROOT))
             matcher.matches()
 
-            if (hasParams) return Action(action_type, matcher.group(matcher.groupCount()).trim())
+            if (hasParams) return Action(action_type, matcher.group(matcher.groupCount())!!.trim())
             else return Action(action_type, "")
         }
     }

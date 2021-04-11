@@ -59,6 +59,6 @@ class ListActivity : ListenableActivity() {
         input_description.text = list.description
 
         recycler.addOnScrollListener(HideFabOnScrollListener(fab))
-        recycler.adapter = ProductAdapter(list.products)
+        recycler.adapter = ProductAdapter(list.getProducts())
     }
 }

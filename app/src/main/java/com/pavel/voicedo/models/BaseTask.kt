@@ -1,7 +1,6 @@
 package com.pavel.voicedo.models
 
 import com.pavel.voicedo.voice.NumberToWords
-import java.util.*
 
 abstract class BaseTask : BaseModel {
     enum class eTypes(val value:Int) {
@@ -11,14 +10,13 @@ abstract class BaseTask : BaseModel {
     var type: eTypes
     var description: String
 
-    constructor() {
+    constructor() : super(){
         id = -1
         type = eTypes.UNDEFINED
         description = ""
     }
 
-    constructor(id: Int, type: eTypes, description: String) {
-        this.id = id
+    constructor(type: eTypes, description: String) : super() {
         this.type = type
         this.description = description
     }
