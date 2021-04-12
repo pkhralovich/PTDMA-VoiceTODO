@@ -16,7 +16,6 @@ import com.pavel.voicedo.models.ShoppingList
 import com.pavel.voicedo.models.Task
 
 class TodoAdapter(_data: List<BaseTask>, _controller: Controller) : RecyclerView.Adapter<TodoAdapter.BaseViewHolder>() {
-
     interface Controller {
         fun onClickItem(item: View)
     }

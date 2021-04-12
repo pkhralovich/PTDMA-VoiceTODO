@@ -6,15 +6,16 @@ class ShoppingList : BaseTask {
     @Ignore
     private var products: List<Product>? = null
 
-    fun getProducts() : List<Product> {
+    fun getProducts() : ArrayList<Product> {
         if (products == null) {
-            products = Product.getByList(this.id)
+            if (this.id == null) products = arrayListOf()
+            else products = Product.getByList(this.id)
         }
 
-        return products!!
+        return (products as ArrayList<Product>?)!!
     }
 
-    constructor() {
+    constructor() : super(eTypes.LIST) {
         this.products = null
     }
 

@@ -28,5 +28,17 @@ class Product : BaseModel {
                 )
                 .list()
         }
+
+        fun find(list: List<Product>, name: String) : Product? {
+            var oRes : Product? = null
+            list.forEach {
+                if (it.description.equals(name, ignoreCase = true)) {
+                    oRes = it
+                    return oRes
+                }
+            }
+
+            return oRes
+        }
     }
 }

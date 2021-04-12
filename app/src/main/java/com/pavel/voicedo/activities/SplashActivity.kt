@@ -21,9 +21,9 @@ class SplashActivity : AppCompatActivity() {
         /*SugarRecord.deleteAll(Product::class.java)
         SugarRecord.deleteAll(Event::class.java)
         SugarRecord.deleteAll(ShoppingList::class.java)
-        SugarRecord.deleteAll(Task::class.java)
+        SugarRecord.deleteAll(Task::class.java)*/
 
-        val products1 = arrayListOf(
+        /*val products1 = arrayListOf(
             Product("Best product one", false),
             Product("Best product two", true),
             Product("Best product three", true),

@@ -102,4 +102,14 @@
     <string name="response_opening_task">Showing task %1$s</string>
 
     <string name="no_location_detected">No location available</string>
+
+    <string name="ask_list_name">Please, say the name of the list</string>
+    <string name="ask_products">Let\'s add the products</string>
+    <string name="response_product_repeated">Product already exists in this list</string>
+    <string name="response_product_not_found">Product not found, try again!</string>
+    <string name="response_say_a_name_product">Please, say a name for the product!</string>
+    <string name="unexpected_action">Unexpected action. Please, say an other order</string>
+    <string name="no_order_found">No order found. Check your micro and try again!</string>
+    <string name="list_saved">List saved!</string>
+    <string name="list_already_exists">List already exists, choose another name!</string>
 </resources>

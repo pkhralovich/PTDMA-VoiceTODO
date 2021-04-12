@@ -12,16 +12,19 @@ class Speaker {
     companion object {
         private lateinit var m_instance : TextToSpeech
         private lateinit var m_context: Context
+        private lateinit var m_listener: SpeakerProgressListener
 
-        fun init(activity: Context, listener: OnInitListener, progressListener: UtteranceProgressListener ) {
-            m_instance = TextToSpeech(activity, listener)
-            m_instance.setOnUtteranceProgressListener(progressListener)
+        fun init(activity: Context, listener: OnInitListener, progressListener: SpeakerProgressListener ) {
             m_context = activity
+            m_instance = TextToSpeech(activity, listener)
+
+            m_listener = progressListener
+            m_instance.setOnUtteranceProgressListener(m_listener)
         }
 
         fun init(activity: Context, listener: OnInitListener) {
-            m_instance = TextToSpeech(activity, listener)
             m_context = activity
+            m_instance = TextToSpeech(activity, listener)
         }
 
         fun onInit(status: Int) : Boolean {
@@ -36,17 +39,18 @@ class Speaker {
             return false
         }
 
-        fun speak(text: String, view: TextView?) {
+        fun speak(text: String, view: TextView?, restartListening: Boolean = true) {
+            m_listener.restartListenOnDone = restartListening
             m_instance.speak(text, QUEUE_FLUSH, null, this::class.java.name)
             if (view != null) view.text = text
         }
 
-        fun speak(text: Int, view: TextView?) {
-            speak(m_context.resources.getString(text), view)
+        fun speak(text: Int, view: TextView?, restartListening: Boolean = true) {
+            speak(m_context.resources.getString(text), view, restartListening)
         }
 
         fun destroy() {
-            if (!this::m_instance.isInitialized) {
+            if (this::m_instance.isInitialized) {
                 m_instance.stop()
                 m_instance.shutdown()
             }

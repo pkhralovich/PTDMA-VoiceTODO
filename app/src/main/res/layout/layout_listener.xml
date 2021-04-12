@@ -28,9 +28,10 @@
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/listener_micro"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_microphone_primary"
+                android:src="@drawable/ic_microphone_disabled_primary"
                 android:contentDescription="@string/icon_micro"
                 android:padding="20dp"/>
         </LinearLayout>
@@ -45,6 +46,7 @@
         android:gravity="center">
 
         <ImageView
+            android:id="@+id/listener_waves"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
@@ -60,6 +62,7 @@
         android:gravity="center">
 
         <TextView
+            android:id="@+id/listener_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"

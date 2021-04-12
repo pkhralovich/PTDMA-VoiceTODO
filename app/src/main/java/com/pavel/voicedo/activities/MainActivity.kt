@@ -2,13 +2,10 @@ package com.pavel.voicedo.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationManager
+import android.location.Geocoder
 import android.os.Bundle
-import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Toast
@@ -41,6 +38,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         companion object {
             const val TASK : String = "TASK"
             const val LIST : String = "LIST"
+            const val LIST_ID : String = "LIST_ID"
             const val EVENT : String = "EVENT"
         }
     }
@@ -68,12 +66,15 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         ButterKnife.bind(this)
         Speaker.init(this, this)
 
-        updateUI()
-
         location_client = LocationServices.getFusedLocationProviderClient(this)
-
         recycler.addOnScrollListener(HideFabOnScrollListener(fab))
+
         checkPermissions()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUI()
     }
 
     fun updateUI() {
@@ -159,41 +160,28 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
     }
 
     @SuppressLint("MissingPermission")
-    private fun requestNewLocationData() {
-        var mLocationRequest = LocationRequest()
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 0
-        mLocationRequest.fastestInterval = 0
-        mLocationRequest.numUpdates = 1
+    fun showLocation() {
+        this.location_client.lastLocation.addOnSuccessListener(this) { location ->
+            if (location != null) {
+                val geocoder = Geocoder(this, Locale.getDefault())
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
 
-        location_client = LocationServices.getFusedLocationProviderClient(this)
-        location_client.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper())
-    }
-
-    private val mLocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            var mLastLocation: Location = locationResult.lastLocation
-            Toast.makeText(baseContext, "Lat: " + mLastLocation.latitude + " Long: " + mLastLocation.longitude, Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Your location is: " + addresses[0].locality,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            else Toast.makeText(this, getString(R.string.no_location_detected), Toast.LENGTH_LONG).show()
         }
     }
 
-    @SuppressLint("MissingPermission")
     fun onResult(action: ActionParser.Action) {
         when (action.action) {
             ActionParser.Action.eActionType.HELP -> onClickHelp()
 
-            ActionParser.Action.eActionType.SHOW_LOCATION -> {
-                this.location_client.lastLocation.addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        if (task.result != null) {
-                            val location = task.result
-                            Toast.makeText(this, "Lat: " + location.latitude + " Long: " + location.longitude, Toast.LENGTH_LONG).show()
-                        } else requestNewLocationData()
-                    } else {
-                        Toast.makeText(this, getString(R.string.no_location_detected), Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
+            ActionParser.Action.eActionType.SHOW_LOCATION -> showLocation()
+
             ActionParser.Action.eActionType.SHOW_ALL_TASKS,
             ActionParser.Action.eActionType.SHOW_ALL_EVENTS,
             ActionParser.Action.eActionType.SHOW_ALL_LISTS,
@@ -302,7 +290,9 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         }
     }
 
-    override fun onInit(status: Int) { }
+    override fun onInit(status: Int) {
+        Speaker.onInit(status)
+    }
 
     @OnClick(R.id.info_icon)
     fun onClickHelp() {
@@ -340,7 +330,10 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
     private fun openList(list: ShoppingList?) {
         val intent = Intent(this, ListActivity::class.java)
 
-        if (list != null) intent.putExtra(PARAMS.LIST, list)
+        if (list != null) {
+            intent.putExtra(PARAMS.LIST_ID, list.id)
+            intent.putExtra(PARAMS.LIST, list)
+        }
 
         startActivity(intent)
     }

@@ -49,7 +49,7 @@ class TaskActivity : ListenableActivity() {
         setContentView(R.layout.activity_task)
         ButterKnife.bind(this)
 
-        task = getIntent().getSerializableExtra(MainActivity.PARAMS.TASK) as Task
+        task = intent.getSerializableExtra(MainActivity.PARAMS.TASK) as Task
 
         updateUI()
     }
@@ -58,5 +58,9 @@ class TaskActivity : ListenableActivity() {
         input_description.text = task.description
         input_state.text = task.getStringState(this)
         input_state_date.text = task.getStringDate()
+    }
+
+    override fun isWaitingInput() : Boolean {
+        return false
     }
 }

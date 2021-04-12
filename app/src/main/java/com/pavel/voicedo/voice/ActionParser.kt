@@ -17,9 +17,11 @@ class ActionParser {
             SHOW_ALL_TASKS, SHOW_ALL_EVENTS, SHOW_ALL_LISTS,
             SHOW_UNDONE_TASKS, SHOW_TASKS_IN_PROCESS,
             SHOW_EVENTS_DAY, SHOW_EVENTS_CURRENT_WEEK, SHOW_EVENTS_NEXT_WEEK,
-            SHOW_LOCATION, INPUT, CLEAR_NAME, CONFIRM_NAME, BACK, EDIT_NAME,
-            EDIT_STATE, CLEAR_DATE, EDIT_DATE, NOT_UNDERSTAND, HELP,
-            CONFIRMATION, CANCELATION
+            SHOW_LOCATION, INPUT, BACK, EDIT_NAME,
+            EDIT_STATE, CLEAR_DATE, EDIT_DATE, NOT_UNDERSTAND, NOT_EXPECTED, HELP,
+            ADD_PRODUCT, REMOVE_PRODUCT, CHECK_PRODUCT,
+            CHANGE_LIST_NAME, CHANGE_TASK_NAME, CHANGE_EVENT_NAME,
+            CONFIRMATION, CANCELATION, FINISH_EDITION
         }
     }
 
@@ -36,6 +38,9 @@ class ActionParser {
         private val VIEW_LIST_PATTERN = "((view|show|open) list)(.*)"
         private val CREATE_LIST_PATTERN = "((create|new|insert) list)(.*)"
         private val DELETE_LIST_PATTERN = "((delete|remove|clear) list)(.*)"
+        private val ADD_PRODUCT_PATTERN = "((add|create) product)(.*)"
+        private val REMOVE_PRODUCT_PATTERN = "((remove|delete) product)(.*)"
+        private val CHECK_PRODUCT_PATTERN = "((marc|mark|check) product)(.*)"
         //END TASKS PATTERNS
 
         //QUERIES AND HELP PATTERNS
@@ -54,12 +59,18 @@ class ActionParser {
         //INPUT PATTERNS
         private val CONFIRM_PATTERN = "(yes|confirm|accept)(.*)"
         private val CANCEL_PATTERN = "(no|cancel|back)(.*)"
+        private val BACK_PATTERN = "(close|cancel|close|end|back)(.*)"
+        private val FINISH_EDITION_PATTERN = "((confirm|finish|end) (edition|creation))(.*)"
+
+        private val CHANGE_LIST_NAME_PATTERN = "((edit|change) list name)(.*)"
+        private val CHANGE_TASK_NAME_PATTERN = "((edit|change) task name)(.*)"
+        private val CHANGE_EVENT_NAME_PATTERN = "((edit|change) event name)(.*)"
         //END INPUT PATTERNS
 
-        fun parse(action: String) : Action {
-            //var action = "delete event one"
+        fun parse(raw_action: String, expected_orders: List<Action.eActionType>) : Action {
+            val action = raw_action.toLowerCase(Locale.ROOT)
 
-            return when {
+            val oRes = when {
                 //QUERIES
                 matches(action, SHOW_ALL_TASKS_PATTERN) -> getAction(Action.eActionType.SHOW_ALL_TASKS, action, SHOW_ALL_TASKS_PATTERN)
                 matches(action, SHOW_ALL_EVENTS_PATTERN) -> getAction(Action.eActionType.SHOW_ALL_EVENTS, action, SHOW_ALL_EVENTS_PATTERN)
@@ -83,11 +94,23 @@ class ActionParser {
                 matches(action, VIEW_LIST_PATTERN) -> getAction(Action.eActionType.VIEW_LIST, action, VIEW_LIST_PATTERN, true)
                 matches(action, DELETE_LIST_PATTERN) -> getAction(Action.eActionType.DELETE_LIST, action, DELETE_LIST_PATTERN, true)
                 matches(action, CREATE_LIST_PATTERN) -> getAction(Action.eActionType.CREATE_LIST, action, CREATE_LIST_PATTERN)
+                matches(action, ADD_PRODUCT_PATTERN) -> getAction(Action.eActionType.ADD_PRODUCT, action, ADD_PRODUCT_PATTERN, true)
+                matches(action, REMOVE_PRODUCT_PATTERN) -> getAction(Action.eActionType.REMOVE_PRODUCT, action, REMOVE_PRODUCT_PATTERN, true)
+                matches(action, CHECK_PRODUCT_PATTERN) -> getAction(Action.eActionType.CHECK_PRODUCT, action, CHECK_PRODUCT_PATTERN, true)
                 //INPUT
                 matches(action, CONFIRM_PATTERN) -> getAction(Action.eActionType.CONFIRMATION, action, CONFIRM_PATTERN)
+                matches(action, BACK_PATTERN) -> getAction(Action.eActionType.BACK, action, BACK_PATTERN)
                 matches(action, CANCEL_PATTERN) -> getAction(Action.eActionType.CANCELATION, action, CANCEL_PATTERN)
+                matches(action, FINISH_EDITION_PATTERN) -> getAction(Action.eActionType.FINISH_EDITION, action, FINISH_EDITION_PATTERN)
+                matches(action, CHANGE_EVENT_NAME_PATTERN) -> getAction(Action.eActionType.CHANGE_EVENT_NAME, action, CHANGE_EVENT_NAME_PATTERN)
+                matches(action, CHANGE_LIST_NAME_PATTERN) -> getAction(Action.eActionType.CHANGE_LIST_NAME, action, CHANGE_LIST_NAME_PATTERN)
+                matches(action, CHANGE_TASK_NAME_PATTERN) -> getAction(Action.eActionType.CHANGE_TASK_NAME, action, CHANGE_TASK_NAME_PATTERN)
+
                 else -> Action(Action.eActionType.NOT_UNDERSTAND, "")
             }
+
+            return if (expected_orders.isEmpty() || expected_orders.contains(oRes.action) || oRes.action == Action.eActionType.NOT_UNDERSTAND) oRes
+            else Action(Action.eActionType.NOT_EXPECTED, "")
         }
 
         private fun matches(action: String, pattern: String) : Boolean {

@@ -45,8 +45,7 @@
             android:elevation="@dimen/card_elevation"
 
             android:textColor="@color/font_dark"
-            android:textSize="@dimen/font_small"
-            android:text="@string/mock_shopping_list_name"/>
+            android:textSize="@dimen/font_small" />
 
         <TextView
             android:id="@+id/label_items"

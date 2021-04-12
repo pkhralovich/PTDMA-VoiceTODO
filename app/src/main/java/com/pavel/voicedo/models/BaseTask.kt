@@ -16,6 +16,11 @@ abstract class BaseTask : BaseModel {
         description = ""
     }
 
+    constructor(type: eTypes) : super() {
+        this.type = type
+        description = ""
+    }
+
     constructor(type: eTypes, description: String) : super() {
         this.type = type
         this.description = description
@@ -46,7 +51,7 @@ abstract class BaseTask : BaseModel {
 
         fun getList(items: List<BaseTask>, key: String) : ShoppingList? {
             items.forEach {
-                if (it.type == eTypes.EVENT) {
+                if (it.type == eTypes.LIST) {
                     if (it.description.equals(key, ignoreCase = true))
                         return it as ShoppingList
                 }

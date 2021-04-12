@@ -39,7 +39,7 @@ class EventActivity : ListenableActivity() {
     }
 
     override fun onResult(action: ActionParser.Action) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,7 @@ class EventActivity : ListenableActivity() {
         setContentView(R.layout.activity_event)
         ButterKnife.bind(this)
 
-        event = getIntent().getSerializableExtra(MainActivity.PARAMS.EVENT) as Event
+        event = intent.getSerializableExtra(MainActivity.PARAMS.EVENT) as Event
 
         updateUI()
     }
@@ -57,5 +57,9 @@ class EventActivity : ListenableActivity() {
         input_description.text = event.description
         input_time.text = event.getStringTime()
         input_date.text = event.getStringLongDate()
+    }
+
+    override fun isWaitingInput() : Boolean {
+        return false
     }
 }
