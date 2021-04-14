@@ -80,6 +80,14 @@
     <string name="edit_list_name_help">Say "edit name" to enter a new name for this list</string>
     <string name="edit_list_products_help">Say "edit list" to enter a new date for this list</string>
     <string name="edit_list_back_help">Say "back" to return to the previous page</string>
+    <string name="say_task_name_help">Say the name of the task to proceed</string>
+
+    <string name="ask_list_name">Please, say the name of the list</string>
+    <string name="ask_products">Okay! Let\'s add some products to the list</string>
+    <string name="unexpected_action">Unexpected action. Please, say an other order</string>
+
+    <string name="list_saved">List saved!</string>
+    <string name="list_already_exists">List already exists, choose another name!</string>
 
     <!-- RESPONSE MESSAGES -->
     <string name="response_how_can_help">Hi! How can I help you?</string>
@@ -100,16 +108,13 @@
     <string name="response_opening_event">Showing event %1$s</string>
     <string name="response_opening_list">Showing list %1$s</string>
     <string name="response_opening_task">Showing task %1$s</string>
-
-    <string name="no_location_detected">No location available</string>
-
-    <string name="ask_list_name">Please, say the name of the list</string>
-    <string name="ask_products">Let\'s add the products</string>
+    <string name="response_no_location_detected">No location available</string>
+    <string name="response_location">Your location is: %1$s</string>
     <string name="response_product_repeated">Product already exists in this list</string>
     <string name="response_product_not_found">Product not found, try again!</string>
     <string name="response_say_a_name_product">Please, say a name for the product!</string>
-    <string name="unexpected_action">Unexpected action. Please, say an other order</string>
-    <string name="no_order_found">No order found. Check your micro and try again!</string>
-    <string name="list_saved">List saved!</string>
-    <string name="list_already_exists">List already exists, choose another name!</string>
+    <string name="response_no_order_found">No order found. Check your micro and try again!</string>
+
+    <string name="task_id_placeholder">T%1$d</string>
+    <string name="event_id_placeholder">E%1$d</string>
 </resources>

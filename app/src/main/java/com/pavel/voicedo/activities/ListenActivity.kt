@@ -1,5 +1,6 @@
 package com.pavel.voicedo.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -31,7 +32,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
     companion object {
         private const val TAG = "ListenActivity"
 
-        enum class eStatus {
+        enum class EnumStatus {
             WAITING_COMMAND,
             WAITING_REMOVE_LIST,
             WAITING_REMOVE_TASK,
@@ -39,16 +40,21 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.icon_waves)
-    lateinit var icon_waves: View
+    lateinit var iconWaves: View
+
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.microphone)
-    lateinit var icon_micro: ImageView
+    lateinit var iconMicro: ImageView
+
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.text_indicator)
-    lateinit var text_indicator: TextView
+    lateinit var textIndicator: TextView
 
-    lateinit var speechRecognizer: SpeechRecognizer
+    private lateinit var speechRecognizer: SpeechRecognizer
 
-    var status : eStatus = eStatus.WAITING_COMMAND
+    private var status : EnumStatus = EnumStatus.WAITING_COMMAND
     private var previousAction : ActionParser.Action? = null
 
     private var handler: Handler? = null
@@ -64,6 +70,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         speechRecognizer.setRecognitionListener(this)
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_cancel)
     fun onCancel() {
         this.finish()
@@ -71,7 +78,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
 
     override fun onInit(status: Int) {
         if (Speaker.onInit(status)) {
-            Speaker.speak(R.string.response_how_can_help, text_indicator)
+            Speaker.speak(R.string.response_how_can_help, textIndicator)
         }
     }
 
@@ -93,7 +100,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
                     Animation.RELATIVE_TO_SELF, 0.5f
             )
             animation.duration = 50
-            icon_waves.startAnimation(animation)
+            iconWaves.startAnimation(animation)
         }
     }
 
@@ -109,7 +116,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         Log.d(TAG, "onError: $error")
 
         if (error == 7) {
-            if (previousAction == null || previousAction?.action != ActionParser.Action.eActionType.BACK) {
+            if (previousAction == null || previousAction?.action != ActionParser.Action.ActionType.BACK) {
                 onNoOrder()
                 finish()
             }
@@ -129,73 +136,75 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         stopListening()
 
         val action = ActionParser.parse(message, getExpectedOrders())
-        if (action.action == ActionParser.Action.eActionType.NOT_UNDERSTAND) onInvalidAction()
-        else if (action.action == ActionParser.Action.eActionType.NOT_EXPECTED) onUnexpectedAction()
-        else {
-            when (this.status) {
-                eStatus.WAITING_COMMAND -> applyCommand(action)
-                else -> {
-                    if (action.action == ActionParser.Action.eActionType.CONFIRMATION) {
-                        val resultIntent = Intent()
-                        resultIntent.putExtra(MainActivity.PARAM_ACTION, this.previousAction)
-                        setResult(RESULT_OK, resultIntent)
-                        finish()
-                    } else {
-                        Speaker.speak(R.string.response_remove_canceled, text_indicator)
-                        finish()
+        when (action.action) {
+            ActionParser.Action.ActionType.NOT_UNDERSTAND -> onInvalidAction()
+            ActionParser.Action.ActionType.NOT_EXPECTED -> onUnexpectedAction()
+            else -> {
+                when (this.status) {
+                    EnumStatus.WAITING_COMMAND -> applyCommand(action)
+                    else -> {
+                        if (action.action == ActionParser.Action.ActionType.CONFIRMATION) {
+                            val resultIntent = Intent()
+                            resultIntent.putExtra(MainActivity.PARAM_ACTION, this.previousAction)
+                            setResult(RESULT_OK, resultIntent)
+                            finish()
+                        } else {
+                            Speaker.speak(R.string.response_remove_canceled, textIndicator)
+                            finish()
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun getExpectedOrders() : List<ActionParser.Action.eActionType> {
-        return if (this.status == eStatus.WAITING_COMMAND) {
+    private fun getExpectedOrders() : List<ActionParser.Action.ActionType> {
+        return if (this.status == EnumStatus.WAITING_COMMAND) {
             listOf(
-                ActionParser.Action.eActionType.CREATE_TASK,
-                ActionParser.Action.eActionType.CREATE_EVENT,
-                ActionParser.Action.eActionType.CREATE_LIST,
-                ActionParser.Action.eActionType.VIEW_TASK,
-                ActionParser.Action.eActionType.VIEW_EVENT,
-                ActionParser.Action.eActionType.VIEW_LIST,
-                ActionParser.Action.eActionType.SHOW_ALL_TASKS,
-                ActionParser.Action.eActionType.SHOW_ALL_EVENTS,
-                ActionParser.Action.eActionType.SHOW_ALL_LISTS,
-                ActionParser.Action.eActionType.SHOW_UNDONE_TASKS,
-                ActionParser.Action.eActionType.SHOW_TASKS_IN_PROCESS,
-                ActionParser.Action.eActionType.SHOW_EVENTS_DAY,
-                ActionParser.Action.eActionType.SHOW_EVENTS_CURRENT_WEEK,
-                ActionParser.Action.eActionType.SHOW_EVENTS_NEXT_WEEK,
-                ActionParser.Action.eActionType.SHOW_LOCATION,
-                ActionParser.Action.eActionType.BACK
+                ActionParser.Action.ActionType.CREATE_TASK,
+                ActionParser.Action.ActionType.CREATE_EVENT,
+                ActionParser.Action.ActionType.CREATE_LIST,
+                ActionParser.Action.ActionType.VIEW_TASK,
+                ActionParser.Action.ActionType.VIEW_EVENT,
+                ActionParser.Action.ActionType.VIEW_LIST,
+                ActionParser.Action.ActionType.SHOW_ALL_TASKS,
+                ActionParser.Action.ActionType.SHOW_ALL_EVENTS,
+                ActionParser.Action.ActionType.SHOW_ALL_LISTS,
+                ActionParser.Action.ActionType.SHOW_UNDONE_TASKS,
+                ActionParser.Action.ActionType.SHOW_TASKS_IN_PROCESS,
+                ActionParser.Action.ActionType.SHOW_EVENTS_DAY,
+                ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK,
+                ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK,
+                ActionParser.Action.ActionType.SHOW_LOCATION,
+                ActionParser.Action.ActionType.BACK
             )
         } else {
             listOf(
-                ActionParser.Action.eActionType.CONFIRMATION,
-                ActionParser.Action.eActionType.CANCELATION
+                ActionParser.Action.ActionType.CONFIRMATION,
+                ActionParser.Action.ActionType.CANCELATION
             )
         }
     }
 
     private fun applyCommand(action: ActionParser.Action) {
         when (action.action) {
-            ActionParser.Action.eActionType.DELETE_TASK -> {
-                this.status = eStatus.WAITING_REMOVE_TASK
+            ActionParser.Action.ActionType.DELETE_TASK -> {
+                this.status = EnumStatus.WAITING_REMOVE_TASK
                 this.previousAction = action
-                Speaker.speak(resources.getString(R.string.response_confirm_remove_task, action.param), text_indicator)
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_task, action.param), textIndicator)
             }
-            ActionParser.Action.eActionType.DELETE_LIST -> {
-                this.status = eStatus.WAITING_REMOVE_LIST
+            ActionParser.Action.ActionType.DELETE_LIST -> {
+                this.status = EnumStatus.WAITING_REMOVE_LIST
                 this.previousAction = action
-                Speaker.speak(resources.getString(R.string.response_confirm_remove_list, action.param), text_indicator)
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_list, action.param), textIndicator)
             }
-            ActionParser.Action.eActionType.DELETE_EVENT -> {
-                this.status = eStatus.WAITING_REMOVE_EVENT
+            ActionParser.Action.ActionType.DELETE_EVENT -> {
+                this.status = EnumStatus.WAITING_REMOVE_EVENT
                 this.previousAction = action
-                Speaker.speak(resources.getString(R.string.response_confirm_remove_event, action.param), text_indicator)
+                Speaker.speak(resources.getString(R.string.response_confirm_remove_event, action.param), textIndicator)
             }
-            ActionParser.Action.eActionType.BACK,
-            ActionParser.Action.eActionType.CANCELATION -> {
+            ActionParser.Action.ActionType.BACK,
+            ActionParser.Action.ActionType.CANCELATION -> {
                 this.previousAction = action
                 this.finish()
             }
@@ -209,15 +218,15 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
     }
 
     private fun onInvalidAction() {
-        Speaker.speak(R.string.response_not_unserstand, text_indicator)
+        Speaker.speak(R.string.response_not_unserstand, textIndicator)
     }
 
     private fun onUnexpectedAction() {
-        Speaker.speak(R.string.unexpected_action, text_indicator)
+        Speaker.speak(R.string.unexpected_action, textIndicator)
     }
 
     private fun onNoOrder() {
-        Speaker.speak(R.string.no_order_found, null, false)
+        Speaker.speak(R.string.response_no_order_found, null, false)
     }
 
     override fun onPartialResults(partialResults: Bundle?) {
@@ -246,7 +255,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
             }, ListenableActivity.MAX_LISTEN_TIMEOUT)
 
             speechRecognizer.startListening(intent)
-            icon_micro.setImageResource(R.drawable.ic_microphone)
+            iconMicro.setImageResource(R.drawable.ic_microphone)
         }, 50)
     }
 
@@ -254,7 +263,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         Handler(Looper.getMainLooper()).post {
             handler?.removeCallbacksAndMessages(null)
             speechRecognizer.stopListening()
-            icon_micro.setImageResource(R.drawable.ic_microphone_disabled)
+            iconMicro.setImageResource(R.drawable.ic_microphone_disabled)
         }
     }
 }

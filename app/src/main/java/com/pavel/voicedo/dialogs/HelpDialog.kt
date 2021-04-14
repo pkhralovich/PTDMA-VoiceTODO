@@ -1,5 +1,6 @@
 package com.pavel.voicedo.dialogs
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
@@ -13,8 +14,9 @@ import com.pavel.voicedo.R
 
 
 class HelpDialog(c: Activity, _help: List<String>) : Dialog(c) {
-    val help : List<String> = _help
+    private val help : List<String> = _help
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.help_root)
     lateinit var root: LinearLayout
 
@@ -23,6 +25,8 @@ class HelpDialog(c: Activity, _help: List<String>) : Dialog(c) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.help_dialog)
         ButterKnife.bind(this)
+
+        //TODO: Revisar
 
         for(help_text : String in help) {
             val child: View = layoutInflater.inflate(R.layout.help_label, null)

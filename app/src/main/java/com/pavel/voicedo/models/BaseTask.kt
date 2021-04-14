@@ -3,25 +3,25 @@ package com.pavel.voicedo.models
 import com.pavel.voicedo.voice.NumberToWords
 
 abstract class BaseTask : BaseModel {
-    enum class eTypes(val value:Int) {
+    enum class EnumTypes(val value:Int) {
         UNDEFINED(-1), TASK(0), EVENT(1), LIST(2)
     }
 
-    var type: eTypes
+    var type: EnumTypes
     var description: String
 
     constructor() : super(){
         id = -1
-        type = eTypes.UNDEFINED
+        type = EnumTypes.UNDEFINED
         description = ""
     }
 
-    constructor(type: eTypes) : super() {
+    constructor(type: EnumTypes) : super() {
         this.type = type
         description = ""
     }
 
-    constructor(type: eTypes, description: String) : super() {
+    constructor(type: EnumTypes, description: String) : super() {
         this.type = type
         this.description = description
     }
@@ -29,7 +29,7 @@ abstract class BaseTask : BaseModel {
     companion object {
         fun getTask(items: List<BaseTask>, key: String) : Task? {
             items.forEach {
-                if (it.type == eTypes.TASK) {
+                if (it.type == EnumTypes.TASK) {
                     val currentKey = NumberToWords.convert(it.id.toLong())
                     if (currentKey.equals(key, ignoreCase = true)) return it as Task
                 }
@@ -40,7 +40,7 @@ abstract class BaseTask : BaseModel {
 
         fun getEvent(items: List<BaseTask>, key: String) : Event? {
             items.forEach {
-                if (it.type == eTypes.EVENT) {
+                if (it.type == EnumTypes.EVENT) {
                     val currentKey = NumberToWords.convert(it.id.toLong())
                     if (currentKey.equals(key, ignoreCase = true)) return it as Event
                 }
@@ -51,7 +51,7 @@ abstract class BaseTask : BaseModel {
 
         fun getList(items: List<BaseTask>, key: String) : ShoppingList? {
             items.forEach {
-                if (it.type == eTypes.LIST) {
+                if (it.type == EnumTypes.LIST) {
                     if (it.description.equals(key, ignoreCase = true))
                         return it as ShoppingList
                 }

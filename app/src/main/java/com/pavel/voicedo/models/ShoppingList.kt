@@ -8,22 +8,22 @@ class ShoppingList : BaseTask {
 
     fun getProducts() : ArrayList<Product> {
         if (products == null) {
-            if (this.id == null) products = arrayListOf()
-            else products = Product.getByList(this.id)
+            products = if (this.id == null) arrayListOf()
+                       else Product.getByList(this.id)
         }
 
         return (products as ArrayList<Product>?)!!
     }
 
-    constructor() : super(eTypes.LIST) {
+    constructor() : super(EnumTypes.LIST) {
         this.products = null
     }
 
-    constructor(name: String, products: List<Product>) : super(eTypes.LIST, name) {
+    constructor(name: String, products: List<Product>) : super(EnumTypes.LIST, name) {
         this.products = products
     }
 
-    fun getProductsCount() : Int {
+    private fun getProductsCount() : Int {
         return getProducts().count()
     }
 

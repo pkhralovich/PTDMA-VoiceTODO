@@ -1,26 +1,30 @@
 package com.pavel.voicedo.activities.base
 
+import android.annotation.SuppressLint
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import com.pavel.voicedo.R
 
 abstract class ToolbarActivity : AppCompatActivity() {
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_label)
-    lateinit var toolbar_label : TextView
+    lateinit var toolbarLabel : TextView
 
-    fun getTitleResource() : Int {
-        return -1;
+    open fun getTitleResource() : Int {
+        return -1
     }
 
-    private fun hasCustomTitle() : Boolean {
-        return getTitleResource() > 0;
+    open fun hasCustomTitle() : Boolean {
+        return getTitleResource() > 0
     }
 
     override fun onStart() {
         super.onStart()
         if (hasCustomTitle()) {
-            toolbar_label.text = resources.getString(getTitleResource())
+            toolbarLabel.text = resources.getString(getTitleResource())
         }
     }
+
+    abstract fun updateUI()
 }

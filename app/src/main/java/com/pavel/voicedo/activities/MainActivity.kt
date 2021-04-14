@@ -37,6 +37,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
     class PARAMS {
         companion object {
             const val TASK : String = "TASK"
+            const val TASK_ID : String = "TASK_ID"
             const val LIST : String = "LIST"
             const val LIST_ID : String = "LIST_ID"
             const val EVENT : String = "EVENT"
@@ -49,15 +50,17 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         const val PARAM_ACTION = "action"
     }
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.recycler_view)
     lateinit var recycler : RecyclerView
+
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.fab)
     lateinit var fab : FloatingActionButton
 
-    var list : ArrayList<BaseTask> = ArrayList()
-    var current_filter : ActionParser.Action? = null
-
-    lateinit var location_client : FusedLocationProviderClient
+    private var list : ArrayList<BaseTask> = ArrayList()
+    private var currentFilter : ActionParser.Action? = null
+    private lateinit var locationClient : FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +69,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         ButterKnife.bind(this)
         Speaker.init(this, this)
 
-        location_client = LocationServices.getFusedLocationProviderClient(this)
+        locationClient = LocationServices.getFusedLocationProviderClient(this)
         recycler.addOnScrollListener(HideFabOnScrollListener(fab))
 
         checkPermissions()
@@ -77,39 +80,39 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         updateUI()
     }
 
-    fun updateUI() {
+    override fun updateUI() {
         list.clear()
         list.addAll(SugarRecord.listAll(Event::class.java))
         list.addAll(SugarRecord.listAll(Task::class.java))
         list.addAll(SugarRecord.listAll(ShoppingList::class.java))
 
-        if (this.current_filter != null) {
-            list = when (current_filter!!.action) {
-                ActionParser.Action.eActionType.SHOW_ALL_TASKS -> list.filter { it.type == BaseTask.eTypes.TASK }
-                ActionParser.Action.eActionType.SHOW_ALL_EVENTS -> list.filter { it.type == BaseTask.eTypes.EVENT }
-                ActionParser.Action.eActionType.SHOW_ALL_LISTS -> list.filter { it.type == BaseTask.eTypes.LIST }
-                ActionParser.Action.eActionType.SHOW_UNDONE_TASKS -> {
+        if (this.currentFilter != null) {
+            list = when (currentFilter?.action) {
+                ActionParser.Action.ActionType.SHOW_ALL_TASKS -> list.filter { it.type == BaseTask.EnumTypes.TASK }
+                ActionParser.Action.ActionType.SHOW_ALL_EVENTS -> list.filter { it.type == BaseTask.EnumTypes.EVENT }
+                ActionParser.Action.ActionType.SHOW_ALL_LISTS -> list.filter { it.type == BaseTask.EnumTypes.LIST }
+                ActionParser.Action.ActionType.SHOW_UNDONE_TASKS -> {
                     list.filter {
-                        if (it.type == BaseTask.eTypes.TASK) {
+                        if (it.type == BaseTask.EnumTypes.TASK) {
                             val item = it as Task
-                            item.state != Task.eTaskState.DONE
+                            item.state != Task.EnumTaskState.DONE
                         } else false
                     }
                 }
-                ActionParser.Action.eActionType.SHOW_TASKS_IN_PROCESS -> {
+                ActionParser.Action.ActionType.SHOW_TASKS_IN_PROCESS -> {
                     list.filter {
-                        if (it.type == BaseTask.eTypes.TASK) {
+                        if (it.type == BaseTask.EnumTypes.TASK) {
                             val item = it as Task
-                            item.state == Task.eTaskState.DOING
+                            item.state == Task.EnumTaskState.DOING
                         } else false
                     }
                 }
-                ActionParser.Action.eActionType.SHOW_EVENTS_DAY -> {
+                ActionParser.Action.ActionType.SHOW_EVENTS_DAY -> {
                     list.filter {
-                        if (it.type == BaseTask.eTypes.EVENT) {
+                        if (it.type == BaseTask.EnumTypes.EVENT) {
                             val item = it as Event
                             val itemDate = DateTime(item.date)
-                            val weekday = this.current_filter!!.param
+                            val weekday = this.currentFilter?.param
                             val itemWeekday = DayOfWeek.of(itemDate.dayOfWeek).getDisplayName(
                                 TextStyle.FULL,
                                 Locale.ENGLISH
@@ -118,15 +121,15 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
                         } else false
                     }
                 }
-                ActionParser.Action.eActionType.SHOW_EVENTS_CURRENT_WEEK -> {
+                ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK -> {
                     //val now = LocalDate.now()
                     //val monday: LocalDate = now.withDayOfWeek(DateTimeConstants.MONDAY)
                     //TODO
-                    list.filter { it.type == BaseTask.eTypes.TASK }
+                    list.filter { it.type == BaseTask.EnumTypes.TASK }
                 }
-                ActionParser.Action.eActionType.SHOW_EVENTS_NEXT_WEEK -> {
+                ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK -> {
                     //TODO
-                    list.filter { it.type == BaseTask.eTypes.TASK }
+                    list.filter { it.type == BaseTask.EnumTypes.TASK }
                 }
                 else -> list
             } as ArrayList<BaseTask>
@@ -141,6 +144,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.fab)
     fun onClickListen() {
         val i = Intent(this, ListenActivity::class.java)
@@ -151,7 +155,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE) {
             if (data != null) {
-                var action : ActionParser.Action? = null;
+                var action : ActionParser.Action? = null
                 if (data.hasExtra(PARAM_ACTION)) action = data.getSerializableExtra(PARAM_ACTION) as ActionParser.Action
 
                 if (action != null) onResult(action)
@@ -161,52 +165,52 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
 
     @SuppressLint("MissingPermission")
     fun showLocation() {
-        this.location_client.lastLocation.addOnSuccessListener(this) { location ->
+        this.locationClient.lastLocation.addOnSuccessListener(this) { location ->
             if (location != null) {
                 val geocoder = Geocoder(this, Locale.getDefault())
                 val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
 
                 Toast.makeText(
                     this,
-                    "Your location is: " + addresses[0].locality,
+                    resources.getString(R.string.response_location, addresses[0].locality),
                     Toast.LENGTH_LONG
                 ).show()
             }
-            else Toast.makeText(this, getString(R.string.no_location_detected), Toast.LENGTH_LONG).show()
+            else Toast.makeText(this, getString(R.string.response_no_location_detected), Toast.LENGTH_LONG).show()
         }
     }
 
-    fun onResult(action: ActionParser.Action) {
+    private fun onResult(action: ActionParser.Action) {
         when (action.action) {
-            ActionParser.Action.eActionType.HELP -> onClickHelp()
+            ActionParser.Action.ActionType.HELP -> onClickHelp()
 
-            ActionParser.Action.eActionType.SHOW_LOCATION -> showLocation()
+            ActionParser.Action.ActionType.SHOW_LOCATION -> showLocation()
 
-            ActionParser.Action.eActionType.SHOW_ALL_TASKS,
-            ActionParser.Action.eActionType.SHOW_ALL_EVENTS,
-            ActionParser.Action.eActionType.SHOW_ALL_LISTS,
-            ActionParser.Action.eActionType.SHOW_UNDONE_TASKS,
-            ActionParser.Action.eActionType.SHOW_TASKS_IN_PROCESS,
-            ActionParser.Action.eActionType.SHOW_EVENTS_DAY,
-            ActionParser.Action.eActionType.SHOW_EVENTS_CURRENT_WEEK,
-            ActionParser.Action.eActionType.SHOW_EVENTS_NEXT_WEEK -> {
-                current_filter = action
+            ActionParser.Action.ActionType.SHOW_ALL_TASKS,
+            ActionParser.Action.ActionType.SHOW_ALL_EVENTS,
+            ActionParser.Action.ActionType.SHOW_ALL_LISTS,
+            ActionParser.Action.ActionType.SHOW_UNDONE_TASKS,
+            ActionParser.Action.ActionType.SHOW_TASKS_IN_PROCESS,
+            ActionParser.Action.ActionType.SHOW_EVENTS_DAY,
+            ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK,
+            ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK -> {
+                currentFilter = action
                 updateUI()
             }
 
-            ActionParser.Action.eActionType.VIEW_TASK -> viewTask(action.param!!)
-            ActionParser.Action.eActionType.DELETE_TASK -> deleteTask(action.param!!)
-            ActionParser.Action.eActionType.CREATE_TASK -> createTask()
+            ActionParser.Action.ActionType.VIEW_TASK -> viewTask(action.param!!)
+            ActionParser.Action.ActionType.DELETE_TASK -> deleteTask(action.param!!)
+            ActionParser.Action.ActionType.CREATE_TASK -> createTask()
 
-            ActionParser.Action.eActionType.VIEW_EVENT -> viewEvent(action.param!!)
-            ActionParser.Action.eActionType.DELETE_EVENT -> deleteEvent(action.param!!)
-            ActionParser.Action.eActionType.CREATE_EVENT -> createEvent()
+            ActionParser.Action.ActionType.VIEW_EVENT -> viewEvent(action.param!!)
+            ActionParser.Action.ActionType.DELETE_EVENT -> deleteEvent(action.param!!)
+            ActionParser.Action.ActionType.CREATE_EVENT -> createEvent()
 
-            ActionParser.Action.eActionType.VIEW_LIST -> viewList(action.param!!)
-            ActionParser.Action.eActionType.DELETE_LIST -> deleteList(action.param!!)
-            ActionParser.Action.eActionType.CREATE_LIST -> createList()
+            ActionParser.Action.ActionType.VIEW_LIST -> viewList(action.param!!)
+            ActionParser.Action.ActionType.DELETE_LIST -> deleteList(action.param!!)
+            ActionParser.Action.ActionType.CREATE_LIST -> createList()
 
-            ActionParser.Action.eActionType.CANCELATION -> {
+            ActionParser.Action.ActionType.CANCELATION -> {
             }
             else -> Speaker.speak(R.string.response_not_unserstand, null)
         }
@@ -294,6 +298,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         Speaker.onInit(status)
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.info_icon)
     fun onClickHelp() {
         MainHelpDialog(this).show()
@@ -304,9 +309,9 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         val task : BaseTask = list[itemPosition]
 
         when (task.type) {
-            BaseTask.eTypes.TASK -> openTask(task as Task)
-            BaseTask.eTypes.EVENT -> openEvent(task as Event)
-            BaseTask.eTypes.LIST -> openList(task as ShoppingList)
+            BaseTask.EnumTypes.TASK -> openTask(task as Task)
+            BaseTask.EnumTypes.EVENT -> openEvent(task as Event)
+            BaseTask.EnumTypes.LIST -> openList(task as ShoppingList)
             else -> { }
         }
     }
@@ -314,7 +319,10 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
     private fun openTask(task: Task?) {
         val intent = Intent(this, TaskActivity::class.java)
 
-        if (task != null) intent.putExtra(PARAMS.TASK, task)
+        if (task != null) {
+            intent.putExtra(PARAMS.TASK_ID, task.id)
+            intent.putExtra(PARAMS.TASK, task)
+        }
 
         startActivity(intent)
     }
@@ -336,6 +344,15 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         }
 
         startActivity(intent)
+    }
+
+    override fun hasCustomTitle() : Boolean {
+        return true
+    }
+
+    override fun getTitleResource() : Int {
+        //TODO: Pendent
+        return R.string.app_name
     }
 
     //region CHECK_LOCATION_PERMISSION

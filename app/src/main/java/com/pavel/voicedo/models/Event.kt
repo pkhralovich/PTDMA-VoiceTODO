@@ -10,7 +10,7 @@ class Event : BaseTask {
         this.date = Date()
     }
 
-    constructor (description: String, date: DateTime) : super(eTypes.EVENT, description) {
+    constructor (description: String, date: DateTime) : super(EnumTypes.EVENT, description) {
         this.date = date.toDate()
     }
 

@@ -18,23 +18,18 @@ class ProductAdapter(_data: List<Product>) : RecyclerView.Adapter<ProductAdapter
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val p = data.get(position)
+        val p = data[position]
 
-        holder.input_checkbox.isChecked = p.bought
-        holder.label_name.text = p.description
+        holder.inputCheckbox.isChecked = p.bought
+        holder.labelName.text = p.description
     }
 
     override fun getItemCount(): Int {
         return data.count()
     }
 
-    class ProductViewHolder : RecyclerView.ViewHolder {
-        var input_checkbox : CheckBox
-        var label_name : TextView
-
-        constructor(_view: View) : super(_view) {
-            input_checkbox = _view.findViewById(R.id.input_checked)
-            label_name = _view.findViewById(R.id.label_name)
-        }
+    class ProductViewHolder(_view: View) : RecyclerView.ViewHolder(_view) {
+        var inputCheckbox : CheckBox = _view.findViewById(R.id.input_checked)
+        var labelName : TextView = _view.findViewById(R.id.label_name)
     }
 }

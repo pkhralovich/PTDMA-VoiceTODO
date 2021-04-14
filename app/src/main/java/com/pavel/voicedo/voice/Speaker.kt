@@ -3,7 +3,6 @@ package com.pavel.voicedo.voice
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.*
-import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.widget.TextView
 import java.util.*
@@ -50,6 +49,7 @@ class Speaker {
         }
 
         fun destroy() {
+            //TODO: Veure si fer servir i com
             if (this::m_instance.isInitialized) {
                 m_instance.stop()
                 m_instance.shutdown()
