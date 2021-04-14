@@ -45,8 +45,7 @@
             android:elevation="@dimen/card_elevation"
 
             android:textColor="@color/font_dark"
-            android:textSize="@dimen/font_small"
-            android:text="@string/mock_very_long_text"/>
+            android:textSize="@dimen/font_small" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,7 +81,6 @@
 
                 android:textColor="@color/font_dark"
                 android:textSize="@dimen/font_small"
-                android:text="@string/mock_task_state"
                 android:textAllCaps="true"/>
         </LinearLayout>
 
@@ -120,7 +118,6 @@
 
                 android:textColor="@color/font_dark"
                 android:textSize="@dimen/font_small"
-                android:text="@string/mock_task_date"
                 android:textAllCaps="true"/>
         </LinearLayout>
     </LinearLayout>

@@ -81,17 +81,22 @@
     <string name="edit_list_products_help">Say "edit list" to enter a new date for this list</string>
     <string name="edit_list_back_help">Say "back" to return to the previous page</string>
     <string name="say_task_name_help">Say the name of the task to proceed</string>
+    <string name="say_task_status_name_help">Say the name of the status to proceed</string>
+    <string name="say_list_name_help">Say the name of the list to proceed</string>
 
     <string name="ask_list_name">Please, say the name of the list</string>
     <string name="ask_products">Okay! Let\'s add some products to the list</string>
     <string name="unexpected_action">Unexpected action. Please, say an other order</string>
+    <string name="ask_task_status">Please, say the new state of the TASK. \n Available states: \n\n PENDING \n DOING \n DONE </string>
+    <string name="ask_task_name">Please, say the name of the task</string>
 
     <string name="list_saved">List saved!</string>
+    <string name="task_saved">Task saved!</string>
     <string name="list_already_exists">List already exists, choose another name!</string>
 
     <!-- RESPONSE MESSAGES -->
     <string name="response_how_can_help">Hi! How can I help you?</string>
-    <string name="response_not_unserstand">I\'m not able to understand you. Please, repeat the order.</string>
+    <string name="response_not_understand">I\'m not able to understand you. Please, repeat the order.</string>
     <string name="response_task_not_found">Task not found</string>
     <string name="response_event_not_found">Event not found</string>
     <string name="response_list_not_found">List not found</string>
@@ -114,7 +119,18 @@
     <string name="response_product_not_found">Product not found, try again!</string>
     <string name="response_say_a_name_product">Please, say a name for the product!</string>
     <string name="response_no_order_found">No order found. Check your micro and try again!</string>
+    <string name="response_confirm_exit">Are you sure you want to leave? All progress will be lost!</string>
 
     <string name="task_id_placeholder">T%1$d</string>
     <string name="event_id_placeholder">E%1$d</string>
+
+    <string name="confirmation_help">Say "yes" or "confirm" to continue the process</string>
+    <string name="cancelation_help">Say "no" or "cancel" to stop the process</string>
+
+    <string name="view_task">View task</string>
+    <string name="view_list">View list</string>
+    <string name="view_event">View event</string>
+    <string name="create_task">Create task</string>
+    <string name="create_list">Create list</string>
+    <string name="create_event">Create event</string>
 </resources>

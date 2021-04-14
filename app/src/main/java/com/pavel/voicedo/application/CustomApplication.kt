@@ -1,4 +1,4 @@
-package com.pavel.voicedo.voice
+package com.pavel.voicedo.application
 
 import com.orm.SugarApp
 import com.orm.SugarContext

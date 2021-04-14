@@ -6,14 +6,26 @@ import org.joda.time.DateTime
 import java.util.*
 
 class Task : BaseTask {
-    enum class EnumTaskState {
-        UNDEFINED, TODO, DOING, DONE
+    companion object {
+        enum class EnumTaskState {
+            UNDEFINED, TODO, DOING, DONE
+        }
+
+        fun getStringState(state: EnumTaskState, c: Context) : String {
+            return when (state) {
+                EnumTaskState.UNDEFINED -> ""
+                EnumTaskState.TODO ->  c.resources.getString(R.string.state_todo)
+                EnumTaskState.DOING -> c.resources.getString(R.string.state_doing)
+                EnumTaskState.DONE -> c.resources.getString(R.string.state_done)
+            }
+        }
     }
 
-    var state : EnumTaskState
-    private var stateDate : Date = Date()
 
-    constructor() {
+    var state : EnumTaskState
+    var stateDate : Date = Date()
+
+    constructor() : super(EnumTypes.TASK) {
         state = EnumTaskState.UNDEFINED
         stateDate = DateTime.now().toDate()
     }
@@ -23,12 +35,7 @@ class Task : BaseTask {
     }
 
     fun getStringState(c: Context) : String{
-        return when (state) {
-            EnumTaskState.UNDEFINED -> ""
-            EnumTaskState.TODO ->  c.resources.getString(R.string.state_todo)
-            EnumTaskState.DOING -> c.resources.getString(R.string.state_doing)
-            EnumTaskState.DONE -> c.resources.getString(R.string.state_done)
-        }
+        return getStringState(state, c)
     }
 
     fun getStringDate() : String {

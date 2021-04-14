@@ -95,7 +95,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
                     list.filter {
                         if (it.type == BaseTask.EnumTypes.TASK) {
                             val item = it as Task
-                            item.state != Task.EnumTaskState.DONE
+                            item.state != Task.Companion.EnumTaskState.DONE
                         } else false
                     }
                 }
@@ -103,7 +103,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
                     list.filter {
                         if (it.type == BaseTask.EnumTypes.TASK) {
                             val item = it as Task
-                            item.state == Task.EnumTaskState.DOING
+                            item.state == Task.Companion.EnumTaskState.DOING
                         } else false
                     }
                 }
@@ -210,9 +210,9 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
             ActionParser.Action.ActionType.DELETE_LIST -> deleteList(action.param!!)
             ActionParser.Action.ActionType.CREATE_LIST -> createList()
 
-            ActionParser.Action.ActionType.CANCELATION -> {
+            ActionParser.Action.ActionType.CANCELLATION -> {
             }
-            else -> Speaker.speak(R.string.response_not_unserstand, null)
+            else -> Speaker.speak(R.string.response_not_understand, null)
         }
     }
 

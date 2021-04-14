@@ -15,7 +15,6 @@ import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import butterknife.BindView
 import butterknife.OnClick
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,7 +22,7 @@ import com.pavel.voicedo.R
 import com.pavel.voicedo.dialogs.HelpDialog
 import com.pavel.voicedo.voice.ActionParser
 import com.pavel.voicedo.voice.Speaker
-import com.pavel.voicedo.voice.SpeakerProgressListener
+import com.pavel.voicedo.listeners.SpeakerProgressListener
 import java.util.ArrayList
 
 abstract class ListenableActivity : ToolbarActivity(), RecognitionListener, TextToSpeech.OnInitListener, SpeakerProgressListener.SpeakerController {
@@ -124,12 +123,14 @@ abstract class ListenableActivity : ToolbarActivity(), RecognitionListener, Text
         HelpDialog(this, getHelpText()).show()
     }
 
-    private fun onNoOrderFound() {
-        Speaker.speak(R.string.response_no_order_found, null)
+    open fun onNoOrderFound() {
+        //TODO: Validar
+        hideListenable()
+        Speaker.speak(R.string.response_no_order_found, null, false)
     }
 
     protected fun onInvalidAction() {
-        Speaker.speak(R.string.response_not_unserstand, listenerLabel)
+        Speaker.speak(R.string.response_not_understand, listenerLabel)
     }
 
     abstract fun onResult(action: ActionParser.Action)
@@ -195,10 +196,12 @@ abstract class ListenableActivity : ToolbarActivity(), RecognitionListener, Text
         for (i in 0 until data.size)
             message += data[i]
 
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
-        if (this.isWaitingInput()) onResult(ActionParser.Action(ActionParser.Action.ActionType.INPUT, message))
-        else onResult(ActionParser.parse(message, listOf()))
+        val action : ActionParser.Action = ActionParser.parse(message, listOf())
+        if (this.isWaitingInput() && action.action != ActionParser.Action.ActionType.BACK)
+            onResult(ActionParser.Action(ActionParser.Action.ActionType.INPUT, message))
+        else onResult(action)
     }
 
     override fun onPartialResults(partialResults: Bundle?) {

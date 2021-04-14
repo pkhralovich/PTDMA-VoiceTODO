@@ -21,6 +21,10 @@ abstract class ToolbarActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        updateTitle()
+    }
+
+    fun updateTitle() {
         if (hasCustomTitle()) {
             toolbarLabel.text = resources.getString(getTitleResource())
         }

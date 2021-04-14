@@ -15,11 +15,11 @@ class ActionParser {
             SHOW_ALL_TASKS, SHOW_ALL_EVENTS, SHOW_ALL_LISTS,
             SHOW_UNDONE_TASKS, SHOW_TASKS_IN_PROCESS,
             SHOW_EVENTS_DAY, SHOW_EVENTS_CURRENT_WEEK, SHOW_EVENTS_NEXT_WEEK,
-            SHOW_LOCATION, INPUT, BACK, EDIT_NAME,
-            EDIT_STATE, CLEAR_DATE, EDIT_DATE, NOT_UNDERSTAND, NOT_EXPECTED, HELP,
+            SHOW_LOCATION, INPUT, BACK, CHANGE_TASK_STATUS,
+            EDIT_EVENT_DATE, NOT_UNDERSTAND, NOT_EXPECTED, HELP,
             ADD_PRODUCT, REMOVE_PRODUCT, CHECK_PRODUCT,
             CHANGE_LIST_NAME, CHANGE_TASK_NAME, CHANGE_EVENT_NAME,
-            CONFIRMATION, CANCELATION, FINISH_EDITION
+            CONFIRMATION, CANCELLATION, FINISH_EDITION
         }
     }
 
@@ -57,11 +57,12 @@ class ActionParser {
         //INPUT PATTERNS
         private const val CONFIRM_PATTERN = "(yes|confirm|accept)(.*)"
         private const val CANCEL_PATTERN = "(no|cancel|back)(.*)"
-        private const val BACK_PATTERN = "(close|cancel|close|end|back)(.*)"
-        private const val FINISH_EDITION_PATTERN = "((confirm|finish|end) (edition|creation))(.*)"
+        private const val BACK_PATTERN = "(close|cancel|end|back)(.*)"
+        private const val FINISH_CREATION_PATTERN = "((confirm|finish|end) (edition|creation))(.*)"
 
         private const val CHANGE_LIST_NAME_PATTERN = "((edit|change) list name)(.*)"
         private const val CHANGE_TASK_NAME_PATTERN = "((edit|change) task name)(.*)"
+        private const val CHANGE_TASK_STATUS_PATTERN = "((edit|change) task status)(.*)"
         private const val CHANGE_EVENT_NAME_PATTERN = "((edit|change) event name)(.*)"
         //END INPUT PATTERNS
 
@@ -98,12 +99,12 @@ class ActionParser {
                 //INPUT
                 matches(action, CONFIRM_PATTERN) -> getAction(Action.ActionType.CONFIRMATION, action, CONFIRM_PATTERN)
                 matches(action, BACK_PATTERN) -> getAction(Action.ActionType.BACK, action, BACK_PATTERN)
-                matches(action, CANCEL_PATTERN) -> getAction(Action.ActionType.CANCELATION, action, CANCEL_PATTERN)
-                matches(action, FINISH_EDITION_PATTERN) -> getAction(Action.ActionType.FINISH_EDITION, action, FINISH_EDITION_PATTERN)
+                matches(action, CANCEL_PATTERN) -> getAction(Action.ActionType.CANCELLATION, action, CANCEL_PATTERN)
+                matches(action, FINISH_CREATION_PATTERN) -> getAction(Action.ActionType.FINISH_EDITION, action, FINISH_CREATION_PATTERN)
                 matches(action, CHANGE_EVENT_NAME_PATTERN) -> getAction(Action.ActionType.CHANGE_EVENT_NAME, action, CHANGE_EVENT_NAME_PATTERN)
                 matches(action, CHANGE_LIST_NAME_PATTERN) -> getAction(Action.ActionType.CHANGE_LIST_NAME, action, CHANGE_LIST_NAME_PATTERN)
                 matches(action, CHANGE_TASK_NAME_PATTERN) -> getAction(Action.ActionType.CHANGE_TASK_NAME, action, CHANGE_TASK_NAME_PATTERN)
-
+                matches(action, CHANGE_TASK_STATUS_PATTERN) -> getAction(Action.ActionType.CHANGE_TASK_STATUS, action, CHANGE_TASK_STATUS_PATTERN)
                 else -> Action(Action.ActionType.NOT_UNDERSTAND, "")
             }
 
@@ -122,8 +123,8 @@ class ActionParser {
             val matcher = compiledPattern.matcher(action.toLowerCase(Locale.ROOT))
             matcher.matches()
 
-            if (hasParams) return Action(action_type, matcher.group(matcher.groupCount())!!.trim())
-            else return Action(action_type, "")
+            return if (hasParams) Action(action_type, matcher.group(matcher.groupCount())!!.trim())
+            else Action(action_type, "")
         }
     }
 }

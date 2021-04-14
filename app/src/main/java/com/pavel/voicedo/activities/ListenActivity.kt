@@ -15,7 +15,6 @@ import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -24,7 +23,7 @@ import com.pavel.voicedo.R
 import com.pavel.voicedo.activities.base.ListenableActivity
 import com.pavel.voicedo.voice.ActionParser
 import com.pavel.voicedo.voice.Speaker
-import com.pavel.voicedo.voice.SpeakerProgressListener
+import com.pavel.voicedo.listeners.SpeakerProgressListener
 import java.util.*
 
 
@@ -132,7 +131,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         for (i in 0 until data.size)
             message += data[i]
 
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         stopListening()
 
         val action = ActionParser.parse(message, getExpectedOrders())
@@ -181,7 +180,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         } else {
             listOf(
                 ActionParser.Action.ActionType.CONFIRMATION,
-                ActionParser.Action.ActionType.CANCELATION
+                ActionParser.Action.ActionType.CANCELLATION
             )
         }
     }
@@ -204,7 +203,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
                 Speaker.speak(resources.getString(R.string.response_confirm_remove_event, action.param), textIndicator)
             }
             ActionParser.Action.ActionType.BACK,
-            ActionParser.Action.ActionType.CANCELATION -> {
+            ActionParser.Action.ActionType.CANCELLATION -> {
                 this.previousAction = action
                 this.finish()
             }
@@ -218,7 +217,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
     }
 
     private fun onInvalidAction() {
-        Speaker.speak(R.string.response_not_unserstand, textIndicator)
+        Speaker.speak(R.string.response_not_understand, textIndicator)
     }
 
     private fun onUnexpectedAction() {

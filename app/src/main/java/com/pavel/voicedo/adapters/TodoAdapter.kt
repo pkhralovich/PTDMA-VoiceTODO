@@ -57,15 +57,15 @@ class TodoAdapter(_data: List<BaseTask>, _controller: Controller) : RecyclerView
         holderInstance.separatorTodoDoing.setBackgroundColor(ContextCompat.getColor(holderInstance.itemView.context, R.color.separator))
 
         when (taskInstance.state) {
-            Task.EnumTaskState.DOING -> {
+            Task.Companion.EnumTaskState.DOING -> {
                 holderInstance.imageTodo.setImageResource(R.drawable.ic_completed)
                 holderInstance.imageDoing.setImageResource(R.drawable.ic_completed)
                 holderInstance.separatorTodoDoing.setBackgroundColor(ContextCompat.getColor(holderInstance.itemView.context, R.color.primary))
             }
-            Task.EnumTaskState.TODO -> {
+            Task.Companion.EnumTaskState.TODO -> {
                 holderInstance.imageTodo.setImageResource(R.drawable.ic_completed)
             }
-            Task.EnumTaskState.DONE -> {
+            Task.Companion.EnumTaskState.DONE -> {
                 holderInstance.imageTodo.setImageResource(R.drawable.ic_completed)
                 holderInstance.imageDoing.setImageResource(R.drawable.ic_completed)
                 holderInstance.imageDone.setImageResource(R.drawable.ic_completed_last)

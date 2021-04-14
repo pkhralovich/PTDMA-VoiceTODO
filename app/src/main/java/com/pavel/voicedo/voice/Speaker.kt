@@ -5,6 +5,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.*
 import android.util.Log
 import android.widget.TextView
+import com.pavel.voicedo.listeners.SpeakerProgressListener
 import java.util.*
 
 class Speaker {
@@ -13,7 +14,7 @@ class Speaker {
         private lateinit var m_context: Context
         private lateinit var m_listener: SpeakerProgressListener
 
-        fun init(activity: Context, listener: OnInitListener, progressListener: SpeakerProgressListener ) {
+        fun init(activity: Context, listener: OnInitListener, progressListener: SpeakerProgressListener) {
             m_context = activity
             m_instance = TextToSpeech(activity, listener)
 
