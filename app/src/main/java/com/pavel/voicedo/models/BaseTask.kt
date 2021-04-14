@@ -2,28 +2,17 @@ package com.pavel.voicedo.models
 
 import com.pavel.voicedo.voice.NumberToWords
 
-abstract class BaseTask : BaseModel {
+abstract class BaseTask() : BaseModel() {
     enum class EnumTypes(val value:Int) {
         UNDEFINED(-1), TASK(0), EVENT(1), LIST(2)
     }
 
-    var type: EnumTypes
-    var description: String
+    var type: EnumTypes = EnumTypes.UNDEFINED
+    var description: String = ""
 
-    constructor() : super(){
-        id = -1
-        type = EnumTypes.UNDEFINED
-        description = ""
-    }
-
-    constructor(type: EnumTypes) : super() {
+    constructor(type: EnumTypes) : this() {
         this.type = type
         description = ""
-    }
-
-    constructor(type: EnumTypes, description: String) : super() {
-        this.type = type
-        this.description = description
     }
 
     companion object {

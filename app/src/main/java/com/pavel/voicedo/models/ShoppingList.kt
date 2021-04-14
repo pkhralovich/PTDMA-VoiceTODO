@@ -2,7 +2,7 @@ package com.pavel.voicedo.models
 
 import com.orm.dsl.Ignore
 
-class ShoppingList : BaseTask {
+class ShoppingList : BaseTask(EnumTypes.LIST) {
     @Ignore
     private var products: List<Product>? = null
 
@@ -13,14 +13,6 @@ class ShoppingList : BaseTask {
         }
 
         return (products as ArrayList<Product>?)!!
-    }
-
-    constructor() : super(EnumTypes.LIST) {
-        this.products = null
-    }
-
-    constructor(name: String, products: List<Product>) : super(EnumTypes.LIST, name) {
-        this.products = products
     }
 
     private fun getProductsCount() : Int {

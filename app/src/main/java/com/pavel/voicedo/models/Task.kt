@@ -5,7 +5,7 @@ import com.pavel.voicedo.R
 import org.joda.time.DateTime
 import java.util.*
 
-class Task : BaseTask {
+class Task : BaseTask(EnumTypes.TASK) {
     companion object {
         enum class EnumTaskState {
             UNDEFINED, TODO, DOING, DONE
@@ -22,17 +22,8 @@ class Task : BaseTask {
     }
 
 
-    var state : EnumTaskState
-    var stateDate : Date = Date()
-
-    constructor() : super(EnumTypes.TASK) {
-        state = EnumTaskState.UNDEFINED
-        stateDate = DateTime.now().toDate()
-    }
-
-    constructor(description: String, state: EnumTaskState) : super(EnumTypes.TASK, description) {
-        this.state = state
-    }
+    var state : EnumTaskState = EnumTaskState.UNDEFINED
+    var stateDate : Date = DateTime.now().toDate()
 
     fun getStringState(c: Context) : String{
         return getStringState(state, c)

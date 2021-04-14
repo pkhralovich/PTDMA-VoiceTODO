@@ -3,18 +3,12 @@ package com.pavel.voicedo.models
 import com.orm.query.Condition
 import com.orm.query.Select
 
-class Product : BaseModel {
+class Product() : BaseModel() {
     var list : Long = 0
     var description : String = ""
     var bought : Boolean = false
 
-    constructor() {
-        this.list = 0
-        this.description = ""
-        this.bought = false
-    }
-
-    constructor(description: String, bought: Boolean) : super() {
+    constructor(description: String, bought: Boolean) : this() {
         this.description = description
         this.bought = bought
     }
