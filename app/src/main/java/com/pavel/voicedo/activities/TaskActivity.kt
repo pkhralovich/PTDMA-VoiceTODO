@@ -182,7 +182,6 @@ class TaskActivity : ListenableActivity() {
     override fun updateUI() {
         inputDescription.text = task.description
 
-
         if (task.state != Task.Companion.EnumTaskState.UNDEFINED) {
             inputStateDate.text = task.getStringDate()
             inputState.text = task.getStringState(this)

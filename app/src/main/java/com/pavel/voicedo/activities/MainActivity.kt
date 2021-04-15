@@ -41,6 +41,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
             const val LIST : String = "LIST"
             const val LIST_ID : String = "LIST_ID"
             const val EVENT : String = "EVENT"
+            const val EVENT_ID : String = "EVENT_ID"
         }
     }
 
