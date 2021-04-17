@@ -29,7 +29,7 @@
             <TextView
                 android:id="@+id/label_date"
                 android:layout_width="0dp"
-                android:layout_weight="0.4"
+                android:layout_weight="0.35"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/default_spacing_small"
                 android:paddingStart="@dimen/default_spacing"
@@ -44,7 +44,7 @@
             <TextView
                 android:id="@+id/input_date"
                 android:layout_width="0dp"
-                android:layout_weight="0.4"
+                android:layout_weight="0.35"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/default_spacing_small"
 
@@ -54,13 +54,12 @@
 
                 android:textColor="@color/font_dark"
                 android:textSize="@dimen/font_small"
-                android:text="@string/mock_event_full_date"
                 android:textAllCaps="true"/>
 
             <TextView
                 android:id="@+id/input_time"
                 android:layout_width="0dp"
-                android:layout_weight="0.2"
+                android:layout_weight="0.3"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/default_spacing_small"
 
@@ -72,7 +71,6 @@
 
                 android:textColor="@color/font_dark"
                 android:textSize="@dimen/font_small"
-                android:text="@string/mock_event_time"
                 android:textAllCaps="true"/>
         </LinearLayout>
 
@@ -102,8 +100,7 @@
             android:elevation="@dimen/card_elevation"
 
             android:textColor="@color/font_dark"
-            android:textSize="@dimen/font_small"
-            android:text="@string/mock_very_long_text"/>
+            android:textSize="@dimen/font_small" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

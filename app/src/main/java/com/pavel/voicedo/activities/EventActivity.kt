@@ -1,7 +1,9 @@
 package com.pavel.voicedo.activities
 
+import android.R.string
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -10,11 +12,21 @@ import com.pavel.voicedo.activities.base.ListenableActivity
 import com.pavel.voicedo.models.Event
 import com.pavel.voicedo.voice.ActionParser
 import com.pavel.voicedo.voice.Speaker
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.regex.Pattern
+
 
 class EventActivity : ListenableActivity() {
     companion object {
+        private val DATE_PATTERN = "(\\d\\d?)(th|nd|st|rd) of (.*)"
+        private val TIME_PATTERN = "(\\d\\d?)(:(\\d\\d))? (a.m.|p.m.|am|pm)"
+
         enum class EnumStatus {
-            VIEW, SAY_NAME, SAY_DATE, WAITING_CONFIRMATION
+            VIEW, SAY_NAME, SAY_DATE, SAY_TIME, WAITING_CONFIRMATION
         }
     }
 
@@ -32,6 +44,7 @@ class EventActivity : ListenableActivity() {
 
     private lateinit var event : Event
     private var status : EnumStatus = EnumStatus.VIEW
+    private var timeSet : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +55,12 @@ class EventActivity : ListenableActivity() {
         if (intent.hasExtra(MainActivity.PARAMS.EVENT)) {
             event = intent.getSerializableExtra(MainActivity.PARAMS.EVENT) as Event
             event.id = intent.getLongExtra(MainActivity.PARAMS.EVENT_ID, -1)
+            timeSet = true
+            status = EnumStatus.VIEW
         } else {
             event = Event()
-            status = EnumStatus.VIEW
+            timeSet = false
+            status = EnumStatus.SAY_DATE
         }
     }
 
@@ -55,8 +71,7 @@ class EventActivity : ListenableActivity() {
     }
 
     override fun onNoOrderFound() {
-        //TODO: Afegir quan la data esta o no buida
-        if (this.isWaitingInput() && event.description.isNotEmpty())
+        if (this.isWaitingInput() && event.date != null && event.description.isNotEmpty())
             this.status = EnumStatus.VIEW
         super.onNoOrderFound()
     }
@@ -99,16 +114,20 @@ class EventActivity : ListenableActivity() {
             }
         } else {
             when (action.action) {
-                ActionParser.Action.ActionType.CHANGE_TASK_NAME -> {
+                ActionParser.Action.ActionType.CHANGE_EVENT_NAME -> {
                     status = EnumStatus.SAY_NAME
                     updateUI()
                 }
-                ActionParser.Action.ActionType.CHANGE_TASK_STATUS -> {
+                ActionParser.Action.ActionType.CHANGE_EVENT_DATE -> {
                     status = EnumStatus.SAY_DATE
                     updateUI()
                 }
+                ActionParser.Action.ActionType.CHANGE_EVENT_TIME -> {
+                    status = EnumStatus.SAY_TIME
+                    updateUI()
+                }
                 ActionParser.Action.ActionType.FINISH_EDITION -> {
-                    event.save()
+                    event.save(this)
                     status = EnumStatus.VIEW
                     Speaker.speak(R.string.event_saved, null, false)
                     hideListenable()
@@ -116,12 +135,18 @@ class EventActivity : ListenableActivity() {
                 }
                 ActionParser.Action.ActionType.BACK,
                 ActionParser.Action.ActionType.CANCELLATION -> {
-                    //TODO
+                    if (isWaitingInput() && event.date != null) {
+                        if (!timeSet) this.status = EnumStatus.SAY_TIME
+                        else if (event.description.isEmpty()) this.status = EnumStatus.SAY_NAME
+                        else this.status = EnumStatus.VIEW
+                        updateUI()
+                    } else this.onBackPressed()
                 }
                 ActionParser.Action.ActionType.INPUT -> {
                     when (status) {
                         EnumStatus.SAY_NAME -> onInputName(action)
                         EnumStatus.SAY_DATE -> onInputDate(action)
+                        EnumStatus.SAY_TIME -> onInputTime(action)
                         else -> onInvalidAction()
                     }
                 }
@@ -130,20 +155,113 @@ class EventActivity : ListenableActivity() {
         }
     }
 
-    fun onInputName(action: ActionParser.Action) {
-        //TODO: Completar
+    private fun onInputName(action: ActionParser.Action) {
+        event.description = action.param!!
+
+        if (event.id != null) event.save(this)
+        status = EnumStatus.VIEW
+
+        hideListenable()
+        updateUI()
     }
 
+    private fun onInputTime(action: ActionParser.Action) {
+        try {
+            if (ActionParser.matches(action.param!!, TIME_PATTERN)) {
+                val compiledPattern = Pattern.compile(DATE_PATTERN)
+                val matcher = compiledPattern.matcher(action.param.toLowerCase(Locale.ROOT))
+                matcher.matches()
+
+                val formatter : DateTimeFormatter?
+                if (matcher.groupCount() == 3) formatter = DateTimeFormat.forPattern("hh:mm aa")
+                else formatter = DateTimeFormat.forPattern("hh aa")
+
+                val date = formatter.parseDateTime(action.param.replace(".", ""))
+
+                val eventDate = DateTime(event.date)
+                event.date = DateTime(eventDate.year, eventDate.monthOfYear, eventDate.dayOfMonth, date.hourOfDay, date.minuteOfHour).toDate()
+                timeSet = true
+
+                if (event.id != null) {
+                    event.save(this)
+                    status = EnumStatus.VIEW
+                    hideListenable()
+                } else status = EnumStatus.SAY_NAME
+
+                updateUI()
+            } else Speaker.speak(R.string.response_invalid_time, listenerLabel, true)
+        } catch (e: Exception) {
+            Speaker.speak(R.string.response_invalid_time, listenerLabel, true)
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
     fun onInputDate(action: ActionParser.Action) {
-        //TODO: Completar
+        if (ActionParser.matches(action.param!!, DATE_PATTERN)) {
+            val compiledPattern = Pattern.compile(DATE_PATTERN)
+            val matcher = compiledPattern.matcher(action.param.toLowerCase(Locale.ROOT))
+            matcher.matches()
+
+            val day = matcher.group(1)!!.trim()
+            val month = matcher.group(matcher.groupCount())!!.trim()
+
+            try {
+                val monthParsed : Int = DateTime(SimpleDateFormat("MMMM").parse(month)).monthOfYear
+                val dayParsed : Int = Integer.parseInt(day)
+
+                if (dayParsed < 1 || dayParsed > 31)
+                    throw Exception("Unable to parse day")
+
+                var date = DateTime(DateTime().year, monthParsed, (dayParsed), 0, 0)
+                if (DateTime().isAfter(date))
+                    date = DateTime(DateTime().year + 1, monthParsed, (dayParsed), 0, 0)
+
+                if (timeSet) {
+                    val eventDate = DateTime(event.date)
+                    event.date = DateTime(date.year, date.monthOfYear, date.dayOfMonth, eventDate.hourOfDay, eventDate.minuteOfHour).toDate()
+                }
+                else event.date = date.toDate()
+
+                if (event.id != null) {
+                    event.save(this)
+                    status = EnumStatus.VIEW
+                    hideListenable()
+                } else status = EnumStatus.SAY_TIME
+
+                updateUI()
+            } catch (e: Exception) {
+                Speaker.speak(R.string.response_invalid_date, listenerLabel, true)
+            }
+        } else Speaker.speak(R.string.response_invalid_date, listenerLabel, true)
     }
 
     override fun updateUI() {
         inputDescription.text = event.description
-        inputTime.text = event.getStringTime()
-        inputDate.text = event.getStringLongDate()
 
-        //TODO: Completar
+        if (event.date != null) {
+            if (timeSet) inputTime.text = event.getStringTime()
+            inputDate.text = event.getStringLongDate()
+        } else {
+            inputTime.text = ""
+            inputDate.text = ""
+        }
+
+        updateTitle()
+
+        when (status) {
+            EnumStatus.SAY_NAME -> {
+                showListenable(false)
+                Speaker.speak(R.string.ask_event_name, listenerLabel)
+            }
+            EnumStatus.SAY_DATE -> {
+                showListenable(false)
+                Speaker.speak(R.string.ask_event_date, listenerLabel)
+            }
+            EnumStatus.SAY_TIME -> {
+                showListenable(false)
+                Speaker.speak(R.string.ask_event_time, listenerLabel)
+            }
+        }
     }
 
     override fun isWaitingInput() : Boolean {

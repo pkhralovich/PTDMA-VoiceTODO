@@ -13,15 +13,16 @@ class ActionParser {
             DELETE_TASK, DELETE_EVENT, DELETE_LIST,
             VIEW_TASK, VIEW_EVENT, VIEW_LIST,
             SHOW_ALL_TASKS, SHOW_ALL_EVENTS, SHOW_ALL_LISTS,
-            SHOW_UNDONE_TASKS, SHOW_TASKS_IN_PROCESS,
+            SHOW_UNDONE_TASKS, SHOW_TASKS_IN_PROCESS, SHOW_EVENTS_TOMORROW,
             SHOW_EVENTS_DAY, SHOW_EVENTS_CURRENT_WEEK, SHOW_EVENTS_NEXT_WEEK,
             SHOW_LOCATION, INPUT, BACK, CHANGE_TASK_STATUS,
-            EDIT_EVENT_DATE, NOT_UNDERSTAND, NOT_EXPECTED, HELP,
+            CHANGE_EVENT_DATE, CHANGE_EVENT_TIME, NOT_UNDERSTAND, NOT_EXPECTED, HELP,
             ADD_PRODUCT, REMOVE_PRODUCT, CHECK_PRODUCT,
             CHANGE_LIST_NAME, CHANGE_TASK_NAME, CHANGE_EVENT_NAME,
             CONFIRMATION, CANCELLATION, FINISH_EDITION
         }
     }
+
 
     companion object {
         //TASKS PATTERNS
@@ -50,7 +51,8 @@ class ActionParser {
         private const val SHOW_TASKS_IN_PROCESS_PATTERN = "((show|view)( all)? (tasks|task) in (process|progress))(.*)"
         private const val SHOW_EVENTS_DAY_PATTERN = "((show|view) (events|event) on)(.*)"
         private const val SHOW_EVENTS_CURRENT_WEEK_PATTERN = "((show|view) (events|event) this week)(.*)"
-        private const val SHOW_EVENTS_NEXT_WEEK_PATTERN = "((show|view) (events|event) tomorrow)(.*)"
+        private const val SHOW_EVENTS_NEXT_WEEK_PATTERN = "((show|view) (events|event) next week)(.*)"
+        private const val SHOW_EVENTS_TOMORROW_PATTERN = "((show|view) (events|event) tomorrow)(.*)"
         private const val SHOW_LOCATION_PATTERN = "((view|show)( my)? location)(.*)"
         //END QUERIES AND HELP PATTERNS
 
@@ -58,11 +60,11 @@ class ActionParser {
         private const val CONFIRM_PATTERN = "(yes|confirm|accept)(.*)"
         private const val CANCEL_PATTERN = "(no|cancel|back)(.*)"
         private const val BACK_PATTERN = "(close|cancel|end|back)(.*)"
-        private const val FINISH_CREATION_PATTERN = "((confirm|finish|end) (edition|creation))(.*)"
+        private const val FINISH_CREATION_PATTERN = "(((confirm|finish|end) (edition|creation))|save)(.*)"
 
         private const val CHANGE_LIST_NAME_PATTERN = "((edit|change) list name)(.*)"
         private const val CHANGE_TASK_NAME_PATTERN = "((edit|change) task name)(.*)"
-        private const val CHANGE_TASK_STATUS_PATTERN = "((edit|change) task status)(.*)"
+        private const val CHANGE_TASK_STATUS_PATTERN = "((edit|change) task (status|state))(.*)"
         private const val CHANGE_EVENT_NAME_PATTERN = "((edit|change) event name)(.*)"
         //END INPUT PATTERNS
 
@@ -76,9 +78,10 @@ class ActionParser {
                 matches(action, SHOW_ALL_LISTS_PATTERN) -> getAction(Action.ActionType.SHOW_ALL_LISTS, action, SHOW_ALL_LISTS_PATTERN)
                 matches(action, SHOW_UNDONE_TASKS_PATTERN) -> getAction(Action.ActionType.SHOW_UNDONE_TASKS, action, SHOW_UNDONE_TASKS_PATTERN)
                 matches(action, SHOW_TASKS_IN_PROCESS_PATTERN) -> getAction(Action.ActionType.SHOW_TASKS_IN_PROCESS, action, SHOW_TASKS_IN_PROCESS_PATTERN)
-                matches(action, SHOW_EVENTS_DAY_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_DAY, action, SHOW_EVENTS_DAY_PATTERN)
+                matches(action, SHOW_EVENTS_DAY_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_DAY, action, SHOW_EVENTS_DAY_PATTERN, true)
                 matches(action, SHOW_EVENTS_CURRENT_WEEK_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_CURRENT_WEEK, action, SHOW_EVENTS_CURRENT_WEEK_PATTERN)
                 matches(action, SHOW_EVENTS_NEXT_WEEK_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_NEXT_WEEK, action, SHOW_EVENTS_NEXT_WEEK_PATTERN)
+                matches(action, SHOW_EVENTS_TOMORROW_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_TOMORROW, action, SHOW_EVENTS_TOMORROW_PATTERN)
                 matches(action, SHOW_LOCATION_PATTERN) -> getAction(Action.ActionType.SHOW_LOCATION, action, SHOW_LOCATION_PATTERN)
                 matches(action, HELP_PATTERN) -> getAction(Action.ActionType.HELP, action, HELP_PATTERN)
                 //TASKS
@@ -112,7 +115,7 @@ class ActionParser {
             else Action(Action.ActionType.NOT_EXPECTED, "")
         }
 
-        private fun matches(action: String, pattern: String) : Boolean {
+        fun matches(action: String, pattern: String) : Boolean {
             val compiledPattern: Pattern = Pattern.compile(pattern)
             val matcher: Matcher = compiledPattern.matcher(action)
             return matcher.matches()

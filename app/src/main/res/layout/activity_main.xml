@@ -8,6 +8,15 @@
 
     <include layout="@layout/toolbar"/>
 
+    <TextView
+        android:id="@+id/empty_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_list"
+        android:layout_centerInParent="true"
+        android:textColor="@color/font_dark"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

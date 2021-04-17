@@ -60,17 +60,29 @@
 
             android:text="@string/label_list_items"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/default_spacing"
-
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
             android:background="@drawable/card_background"
-            android:orientation="vertical"
-            android:elevation="@dimen/card_elevation" />
+            android:elevation="@dimen/card_elevation" >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/default_spacing"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
+
+            <TextView
+                android:id="@+id/empty_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_list"
+                android:layout_centerInParent="true"
+                android:textColor="@color/font_dark"
+                android:visibility="gone"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

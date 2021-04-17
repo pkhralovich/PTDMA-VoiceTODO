@@ -1,7 +1,10 @@
 package com.pavel.voicedo.activities.base
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +18,8 @@ import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.checkSelfPermission
 import butterknife.BindView
 import butterknife.OnClick
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -78,6 +83,20 @@ abstract class ListenableActivity : ToolbarActivity(), RecognitionListener, Text
 
             view.startAnimation(anim)
         }
+
+        fun isCalendarAction(action: ActionParser.Action) : Boolean {
+            return action.action == ActionParser.Action.ActionType.CREATE_EVENT
+                    || action.action == ActionParser.Action.ActionType.DELETE_EVENT
+                    || action.action == ActionParser.Action.ActionType.VIEW_EVENT
+                    || action.action == ActionParser.Action.ActionType.SHOW_EVENTS_DAY
+                    || action.action == ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK
+                    || action.action == ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK
+        }
+
+        fun hasCalendarPermissions(c: Context) : Boolean {
+            return checkSelfPermission(c, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -124,7 +143,6 @@ abstract class ListenableActivity : ToolbarActivity(), RecognitionListener, Text
     }
 
     open fun onNoOrderFound() {
-        //TODO: Validar
         hideListenable()
         Speaker.speak(R.string.response_no_order_found, null, false)
     }
@@ -196,12 +214,15 @@ abstract class ListenableActivity : ToolbarActivity(), RecognitionListener, Text
         for (i in 0 until data.size)
             message += data[i]
 
-        //Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
         val action : ActionParser.Action = ActionParser.parse(message, listOf())
         if (this.isWaitingInput() && action.action != ActionParser.Action.ActionType.BACK)
             onResult(ActionParser.Action(ActionParser.Action.ActionType.INPUT, message))
-        else onResult(action)
+        else {
+            if (isCalendarAction(action) && !hasCalendarPermissions(this)) Speaker.speak(R.string.unable_to_calendar, listenerLabel)
+            else onResult(action)
+        }
     }
 
     override fun onPartialResults(partialResults: Bundle?) {

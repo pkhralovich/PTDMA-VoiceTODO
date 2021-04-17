@@ -15,6 +15,7 @@ import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -131,7 +132,7 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
         for (i in 0 until data.size)
             message += data[i]
 
-        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         stopListening()
 
         val action = ActionParser.parse(message, getExpectedOrders())
@@ -166,6 +167,9 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
                 ActionParser.Action.ActionType.VIEW_TASK,
                 ActionParser.Action.ActionType.VIEW_EVENT,
                 ActionParser.Action.ActionType.VIEW_LIST,
+                ActionParser.Action.ActionType.DELETE_EVENT,
+                ActionParser.Action.ActionType.DELETE_LIST,
+                ActionParser.Action.ActionType.DELETE_TASK,
                 ActionParser.Action.ActionType.SHOW_ALL_TASKS,
                 ActionParser.Action.ActionType.SHOW_ALL_EVENTS,
                 ActionParser.Action.ActionType.SHOW_ALL_LISTS,
@@ -175,12 +179,14 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
                 ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK,
                 ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK,
                 ActionParser.Action.ActionType.SHOW_LOCATION,
-                ActionParser.Action.ActionType.BACK
+                ActionParser.Action.ActionType.BACK,
+                ActionParser.Action.ActionType.HELP
             )
         } else {
             listOf(
                 ActionParser.Action.ActionType.CONFIRMATION,
-                ActionParser.Action.ActionType.CANCELLATION
+                ActionParser.Action.ActionType.CANCELLATION,
+                ActionParser.Action.ActionType.HELP
             )
         }
     }
@@ -208,10 +214,14 @@ class ListenActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Recogni
                 this.finish()
             }
             else -> {
-                val resultIntent = Intent()
-                resultIntent.putExtra(MainActivity.PARAM_ACTION, action)
-                setResult(RESULT_OK, resultIntent)
-                finish()
+                if (ListenableActivity.isCalendarAction(action) && !ListenableActivity.hasCalendarPermissions(this))
+                    Speaker.speak(R.string.unable_to_calendar, textIndicator)
+                else {
+                    val resultIntent = Intent()
+                    resultIntent.putExtra(MainActivity.PARAM_ACTION, action)
+                    setResult(RESULT_OK, resultIntent)
+                    finish()
+                }
             }
         }
     }

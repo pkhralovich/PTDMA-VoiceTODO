@@ -101,6 +101,7 @@ class TaskActivity : ListenableActivity() {
             }
         } else {
             when (action.action) {
+                ActionParser.Action.ActionType.HELP -> onClickHelp()
                 ActionParser.Action.ActionType.CHANGE_TASK_NAME -> {
                     status = EnumStatus.SAY_NAME
                     updateUI()
@@ -193,7 +194,7 @@ class TaskActivity : ListenableActivity() {
 
         updateTitle()
 
-        when (this.status) {
+        when (status) {
             EnumStatus.SAY_NAME -> {
                 showListenable(false)
                 Speaker.speak(R.string.ask_task_name, listenerLabel)

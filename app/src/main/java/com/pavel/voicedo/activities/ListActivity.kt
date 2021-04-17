@@ -2,6 +2,7 @@
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
@@ -31,6 +32,10 @@ class ListActivity : ListenableActivity() {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.recycler)
     lateinit var recycler: RecyclerView
+
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.empty_message)
+    lateinit var emptyMessage : TextView
 
     lateinit var list : ShoppingList
     private var status : EnumStatus = EnumStatus.VIEW
@@ -96,6 +101,7 @@ class ListActivity : ListenableActivity() {
             }
         } else {
             when (action.action) {
+                ActionParser.Action.ActionType.HELP -> onClickHelp()
                 ActionParser.Action.ActionType.INPUT -> {
                     if (this.status == EnumStatus.SAY_NAME) {
                         val lists = SugarRecord.listAll(ShoppingList::class.java)
@@ -217,6 +223,14 @@ class ListActivity : ListenableActivity() {
     private fun updateList() {
         recycler.addOnScrollListener(HideFabOnScrollListener(fab))
         recycler.adapter = ProductAdapter(list.getProducts())
+
+        if (list.getProducts().isEmpty()) {
+            emptyMessage.visibility = View.VISIBLE
+            recycler.visibility = View.GONE
+        } else {
+            emptyMessage.visibility = View.GONE
+            recycler.visibility = View.VISIBLE
+        }
     }
 
     override fun onClickListen() {

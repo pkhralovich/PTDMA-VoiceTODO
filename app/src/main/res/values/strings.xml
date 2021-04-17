@@ -32,6 +32,8 @@
     <string name="location_permission_not_granted">Location permission NOT enabled. You will be unable to check your location.</string>
     <string name="microphone_permission_granted">Microphone permission enabled</string>
     <string name="microphone_permission_not_granted">Microphone permission NOT enabled. You will be unable to control the app by voice.</string>
+    <string name="calendar_permission_granted">Calendar permission enabled</string>
+    <string name="calendar_permission_not_granted">Calendar permission NOT enabled. You will be unable to view or create events.</string>
 
     <string name="main_help_actions">Actions</string>
     <string name="main_help_actions_list_1"> Create/delete task </string>
@@ -89,6 +91,7 @@
     <string name="ask_list_name">Please, say the name of the list</string>
     <string name="ask_event_name">Please, say the name of the event</string>
     <string name="ask_event_date">Please, say the date of the event</string>
+    <string name="ask_event_time">Please, say the time of the event</string>
     <string name="ask_products">Okay! Let\'s add some products to the list</string>
     <string name="unexpected_action">Unexpected action. Please, say an other order</string>
     <string name="ask_task_status">Please, say the new state of the TASK. \n Available states: \n\n PENDING \n DOING \n DONE </string>
@@ -96,7 +99,7 @@
 
     <string name="list_saved">List saved!</string>
     <string name="task_saved">Task saved!</string>
-    <string name="event_saved">Event</string>
+    <string name="event_saved">Event saved!</string>
     <string name="list_already_exists">List already exists, choose another name!</string>
 
     <!-- RESPONSE MESSAGES -->
@@ -132,10 +135,18 @@
     <string name="confirmation_help">Say "yes" or "confirm" to continue the process</string>
     <string name="cancelation_help">Say "no" or "cancel" to stop the process</string>
 
+    <string name="response_invalid_date">Not valid date, please, say another one!</string>
+    <string name="response_invalid_time">Not valid time, please, say another one!</string>
+
     <string name="view_task">View task</string>
     <string name="view_list">View list</string>
     <string name="view_event">View event</string>
     <string name="create_task">Create task</string>
     <string name="create_list">Create list</string>
     <string name="create_event">Create event</string>
+
+    <string name="empty_list">Empty list!</string>
+    <string name="unable_to_calendar">Unable to make calendar actions, enable the permissions to acces to the calendar!</string>
+    <string name="query_not_implemented">Query not implemented!</string>
+    <string name="day_not_specified">Day of week is empty, showing everything!</string>
 </resources>

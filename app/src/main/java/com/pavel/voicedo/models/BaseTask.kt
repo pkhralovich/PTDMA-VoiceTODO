@@ -20,7 +20,8 @@ abstract class BaseTask() : BaseModel() {
             items.forEach {
                 if (it.type == EnumTypes.TASK) {
                     val currentKey = NumberToWords.convert(it.id.toLong())
-                    if (currentKey.equals(key, ignoreCase = true)) return it as Task
+                    if (currentKey.equals(key, ignoreCase = true) || it.id.toString().equals(key, ignoreCase = true))
+                        return it as Task
                 }
             }
 
@@ -31,7 +32,8 @@ abstract class BaseTask() : BaseModel() {
             items.forEach {
                 if (it.type == EnumTypes.EVENT) {
                     val currentKey = NumberToWords.convert(it.id.toLong())
-                    if (currentKey.equals(key, ignoreCase = true)) return it as Event
+                    if (currentKey.equals(key, ignoreCase = true) || it.id.toString().equals(key, ignoreCase = true))
+                        return it as Event
                 }
             }
 
@@ -41,7 +43,7 @@ abstract class BaseTask() : BaseModel() {
         fun getList(items: List<BaseTask>, key: String) : ShoppingList? {
             items.forEach {
                 if (it.type == EnumTypes.LIST) {
-                    if (it.description.equals(key, ignoreCase = true))
+                    if (it.description.equals(key, ignoreCase = true) || it.id.toString().equals(key, ignoreCase = true))
                         return it as ShoppingList
                 }
             }

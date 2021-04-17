@@ -8,6 +8,7 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,6 +28,8 @@ import com.pavel.voicedo.models.*
 import com.pavel.voicedo.voice.ActionParser
 import com.pavel.voicedo.voice.Speaker
 import org.joda.time.DateTime
+import org.joda.time.DateTimeConstants
+import org.joda.time.LocalDate
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.*
@@ -56,6 +59,10 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
     lateinit var recycler : RecyclerView
 
     @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.empty_message)
+    lateinit var emptyMessage : TextView
+
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.fab)
     lateinit var fab : FloatingActionButton
 
@@ -83,7 +90,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
 
     override fun updateUI() {
         list.clear()
-        list.addAll(SugarRecord.listAll(Event::class.java))
+        list.addAll(Event.listAll(this))
         list.addAll(SugarRecord.listAll(Task::class.java))
         list.addAll(SugarRecord.listAll(ShoppingList::class.java))
 
@@ -109,28 +116,44 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
                     }
                 }
                 ActionParser.Action.ActionType.SHOW_EVENTS_DAY -> {
+                    val weekday = this.currentFilter?.param
+                    if (weekday != null && weekday.isNotEmpty()) {
+                        list.filter {
+                            if (it.type == BaseTask.EnumTypes.EVENT) {
+                                val item = it as Event
+                                val itemDate = DateTime(item.date)
+                                val itemWeekday = DayOfWeek.of(itemDate.dayOfWeek).getDisplayName(
+                                        TextStyle.FULL,
+                                        Locale.ENGLISH
+                                )
+                                itemWeekday.equals(weekday, ignoreCase = true)
+                            } else false
+                        }
+                    } else {
+                        Speaker.speak(R.string.day_not_specified, null)
+                        list
+                    }
+                }
+                ActionParser.Action.ActionType.SHOW_EVENTS_TOMORROW -> {
                     list.filter {
                         if (it.type == BaseTask.EnumTypes.EVENT) {
                             val item = it as Event
                             val itemDate = DateTime(item.date)
-                            val weekday = this.currentFilter?.param
-                            val itemWeekday = DayOfWeek.of(itemDate.dayOfWeek).getDisplayName(
-                                TextStyle.FULL,
-                                Locale.ENGLISH
-                            )
-                            itemWeekday.equals(weekday, ignoreCase = true)
+                            val currentDate = DateTime(item.date).plusDays(1)
+
+                            itemDate.year == currentDate.year && itemDate.monthOfYear == currentDate.monthOfYear && itemDate.dayOfMonth == currentDate.dayOfMonth
                         } else false
                     }
                 }
                 ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK -> {
-                    //val now = LocalDate.now()
-                    //val monday: LocalDate = now.withDayOfWeek(DateTimeConstants.MONDAY)
-                    //TODO
-                    list.filter { it.type == BaseTask.EnumTypes.TASK }
+                    list.clear()
+                    list.addAll(Event.listCurrentWeek(this))
+                    list
                 }
                 ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK -> {
-                    //TODO
-                    list.filter { it.type == BaseTask.EnumTypes.TASK }
+                    list.clear()
+                    list.addAll(Event.listNextWeek(this))
+                    list
                 }
                 else -> list
             } as ArrayList<BaseTask>
@@ -142,6 +165,14 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         else {
             (recycler.adapter as TodoAdapter).data = list
             recycler.adapter!!.notifyDataSetChanged()
+        }
+
+        if (list.isEmpty()) {
+            emptyMessage.visibility = View.VISIBLE
+            recycler.visibility = View.GONE
+        } else {
+            emptyMessage.visibility = View.GONE
+            recycler.visibility = View.VISIBLE
         }
     }
 
@@ -172,9 +203,9 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
                 val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
 
                 Toast.makeText(
-                    this,
-                    resources.getString(R.string.response_location, addresses[0].locality),
-                    Toast.LENGTH_LONG
+                        this,
+                        resources.getString(R.string.response_location, addresses[0].locality),
+                        Toast.LENGTH_LONG
                 ).show()
             }
             else Toast.makeText(this, getString(R.string.response_no_location_detected), Toast.LENGTH_LONG).show()
@@ -268,7 +299,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
 
         if (event == null) Speaker.speak(R.string.response_event_not_found, null)
         else {
-            event.delete()
+            event.delete(this)
             Speaker.speak(R.string.response_removing_event, null)
             updateUI()
         }
@@ -347,43 +378,44 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         startActivity(intent)
     }
 
-    override fun hasCustomTitle() : Boolean {
-        return true
-    }
-
-    override fun getTitleResource() : Int {
-        //TODO: Pendent
-        return R.string.app_name
-    }
-
     //region CHECK_LOCATION_PERMISSION
     private fun checkPermissions() {
         val permissionLocation = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
         )
         val permissionMicrophone = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.RECORD_AUDIO
+                this,
+                Manifest.permission.RECORD_AUDIO
+        )
+        val permissionWriteCalendar = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_CALENDAR
+        )
+        val permissionReadCalendar = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_CALENDAR
         )
 
         val permissions : ArrayList<String> = ArrayList()
         if (permissionLocation != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
         if (permissionMicrophone != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.RECORD_AUDIO)
+        if (permissionWriteCalendar != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.WRITE_CALENDAR)
+        if (permissionReadCalendar != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.READ_CALENDAR)
 
         if (permissions.size > 0) {
             ActivityCompat.requestPermissions(
-                this@MainActivity,
-                permissions.toTypedArray(),
-                PERMISSION_REQUEST_LOCATION
+                    this@MainActivity,
+                    permissions.toTypedArray(),
+                    PERMISSION_REQUEST_LOCATION
             )
         }
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
     ) {
         when (requestCode) {
             PERMISSION_REQUEST_LOCATION -> {
@@ -391,9 +423,10 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
                     for ((index, permission: String) in permissions.withIndex()) {
                         when (permission) {
                             Manifest.permission.ACCESS_FINE_LOCATION -> onLocationPermission(
-                                grantResults[index]
+                                    grantResults[index]
                             )
                             Manifest.permission.RECORD_AUDIO -> onAudioPermission(grantResults[index])
+                            Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR -> onCalendarPermission(grantResults[index])
                         }
                     }
                 }
@@ -413,6 +446,13 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
             Toast.makeText(this, R.string.microphone_permission_granted, Toast.LENGTH_LONG).show()
         else
             Toast.makeText(this, R.string.microphone_permission_not_granted, Toast.LENGTH_LONG).show()
+    }
+
+    private fun onCalendarPermission(result: Int) {
+        if (result == PackageManager.PERMISSION_GRANTED)
+            Toast.makeText(this, R.string.calendar_permission_granted, Toast.LENGTH_LONG).show()
+        else
+            Toast.makeText(this, R.string.calendar_permission_not_granted, Toast.LENGTH_LONG).show()
     }
     //endregion
 }
