@@ -48,13 +48,5 @@ class Speaker {
         fun speak(text: Int, view: TextView?, restartListening: Boolean = true) {
             speak(m_context.resources.getString(text), view, restartListening)
         }
-
-        fun destroy() {
-            //TODO: Veure si fer servir i com
-            if (this::m_instance.isInitialized) {
-                m_instance.stop()
-                m_instance.shutdown()
-            }
-        }
     }
 }

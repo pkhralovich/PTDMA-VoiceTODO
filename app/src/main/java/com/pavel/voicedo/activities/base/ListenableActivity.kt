@@ -140,6 +140,7 @@ abstract class ListenableActivity : ToolbarActivity(), RecognitionListener, Text
     @OnClick(R.id.info_icon)
     open fun onClickHelp() {
         HelpDialog(this, getHelpText()).show()
+        hideListenable()
     }
 
     open fun onNoOrderFound() {

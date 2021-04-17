@@ -1,7 +1,6 @@
 package com.pavel.voicedo.models
 
 import android.Manifest
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
@@ -9,9 +8,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
-import com.google.android.material.snackbar.Snackbar
 import com.pavel.voicedo.R
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
@@ -59,13 +56,13 @@ class Event : BaseTask(EnumTypes.EVENT) {
 
         private fun getCurrentWeekQuery() : Uri {
             val now = LocalDate()
-            val current_week_begin = now.withDayOfWeek(DateTimeConstants.MONDAY)
+            val currentWeekBegin = now.withDayOfWeek(DateTimeConstants.MONDAY)
             val beginTime = Calendar.getInstance()
-            beginTime.set(current_week_begin.year, current_week_begin.monthOfYear-1, current_week_begin.dayOfMonth, 0, 0)
+            beginTime.set(currentWeekBegin.year, currentWeekBegin.monthOfYear-1, currentWeekBegin.dayOfMonth, 0, 0)
 
-            val current_week_end = DateTime(beginTime).plusDays(6)
+            val currentWeekEnd = DateTime(beginTime).plusDays(6)
             val endTime = Calendar.getInstance()
-            endTime.set(current_week_end.year, current_week_end.monthOfYear-1, current_week_end.dayOfMonth, 23, 59)
+            endTime.set(currentWeekEnd.year, currentWeekEnd.monthOfYear-1, currentWeekEnd.dayOfMonth, 23, 59)
 
             val builder: Uri.Builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
             ContentUris.appendId(builder, beginTime.timeInMillis)
@@ -76,13 +73,13 @@ class Event : BaseTask(EnumTypes.EVENT) {
 
         private fun getNextWeekQuery() : Uri {
             val now = LocalDate().plusDays(7)
-            val current_week_begin = now.withDayOfWeek(DateTimeConstants.MONDAY)
+            val currentWeekBegin = now.withDayOfWeek(DateTimeConstants.MONDAY)
             val beginTime = Calendar.getInstance()
-            beginTime.set(current_week_begin.year, current_week_begin.monthOfYear-1, current_week_begin.dayOfMonth, 0, 0)
+            beginTime.set(currentWeekBegin.year, currentWeekBegin.monthOfYear-1, currentWeekBegin.dayOfMonth, 0, 0)
 
-            val current_week_end = DateTime(beginTime).plusDays(6)
+            val currentWeekEnd = DateTime(beginTime).plusDays(6)
             val endTime = Calendar.getInstance()
-            endTime.set(current_week_end.year, current_week_end.monthOfYear-1, current_week_end.dayOfMonth, 23, 59)
+            endTime.set(currentWeekEnd.year, currentWeekEnd.monthOfYear-1, currentWeekEnd.dayOfMonth, 23, 59)
 
             val builder: Uri.Builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
             ContentUris.appendId(builder, beginTime.timeInMillis)
@@ -109,8 +106,8 @@ class Event : BaseTask(EnumTypes.EVENT) {
                 return listOf()
             }
 
-            var selection = CalendarContract.Instances.ALL_DAY + "= 0 AND " + CalendarContract.Instances.CALENDAR_ID + " = ?"
-            var selectionArgs = arrayOf(getMainCalendar(c).toString())
+            val selection = CalendarContract.Instances.ALL_DAY + "= 0 AND " + CalendarContract.Instances.CALENDAR_ID + " = ?"
+            val selectionArgs = arrayOf(getMainCalendar(c).toString())
             val cur: Cursor? = c.contentResolver.query(getCurrentWeekQuery(), EVENT_INSTANCE_PROJECTION, selection, selectionArgs, getEventsOrder())
             return parseEvents(cur!!)
         }
@@ -120,8 +117,8 @@ class Event : BaseTask(EnumTypes.EVENT) {
                 return listOf()
             }
 
-            var selection = CalendarContract.Instances.ALL_DAY + "= 0 AND " + CalendarContract.Instances.CALENDAR_ID + " = ?"
-            var selectionArgs = arrayOf(getMainCalendar(c).toString())
+            val selection = CalendarContract.Instances.ALL_DAY + "= 0 AND " + CalendarContract.Instances.CALENDAR_ID + " = ?"
+            val selectionArgs = arrayOf(getMainCalendar(c).toString())
             val cur: Cursor? = c.contentResolver.query(getNextWeekQuery(), EVENT_INSTANCE_PROJECTION, selection, selectionArgs, getEventsOrder())
             return parseEvents(cur!!)
         }
@@ -131,8 +128,8 @@ class Event : BaseTask(EnumTypes.EVENT) {
                 return listOf()
             }
 
-            var selection = CalendarContract.Instances.ALL_DAY + "= 0 AND " + CalendarContract.Instances.CALENDAR_ID + " = ?"
-            var selectionArgs = arrayOf(getMainCalendar(c).toString())
+            val selection = CalendarContract.Instances.ALL_DAY + "= 0 AND " + CalendarContract.Instances.CALENDAR_ID + " = ?"
+            val selectionArgs = arrayOf(getMainCalendar(c).toString())
             val cur: Cursor? = c.contentResolver.query(getEventsQuery(), EVENT_INSTANCE_PROJECTION, selection, selectionArgs, getEventsOrder())
             return parseEvents(cur!!)
         }

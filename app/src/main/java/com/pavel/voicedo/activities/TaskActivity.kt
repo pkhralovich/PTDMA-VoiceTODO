@@ -95,6 +95,7 @@ class TaskActivity : ListenableActivity() {
             when (action.action) {
                 ActionParser.Action.ActionType.CONFIRMATION -> this.finish()
                 else -> {
+                    hideListenable()
                     this.status = EnumStatus.VIEW
                     updateUI()
                 }
@@ -132,6 +133,11 @@ class TaskActivity : ListenableActivity() {
                         EnumStatus.SAY_STATUS -> onInputStatus(action)
                         else -> onInvalidAction()
                     }
+                }
+                ActionParser.Action.ActionType.DELETE_TASK -> {
+                    task.delete()
+                    Speaker.speak(R.string.response_removing_task, null)
+                    finish()
                 }
                 else -> onInvalidAction()
             }
@@ -203,6 +209,7 @@ class TaskActivity : ListenableActivity() {
                 showListenable(false)
                 Speaker.speak(R.string.ask_task_status, listenerLabel)
             }
+            else -> {}
         }
     }
 

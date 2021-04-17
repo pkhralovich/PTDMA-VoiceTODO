@@ -28,8 +28,6 @@ import com.pavel.voicedo.models.*
 import com.pavel.voicedo.voice.ActionParser
 import com.pavel.voicedo.voice.Speaker
 import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
-import org.joda.time.LocalDate
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.*
@@ -224,6 +222,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
             ActionParser.Action.ActionType.SHOW_UNDONE_TASKS,
             ActionParser.Action.ActionType.SHOW_TASKS_IN_PROCESS,
             ActionParser.Action.ActionType.SHOW_EVENTS_DAY,
+            ActionParser.Action.ActionType.SHOW_EVENTS_TOMORROW,
             ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK,
             ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK -> {
                 currentFilter = action
@@ -276,10 +275,10 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
     private fun deleteTask(list_id: String) {
         val task : Task? = BaseTask.getTask(list, list_id)
 
-        if (task == null) Speaker.speak(R.string.response_list_not_found, null)
+        if (task == null) Speaker.speak(R.string.response_task_not_found, null)
         else {
             task.delete()
-            Speaker.speak(R.string.response_removing_list, null)
+            Speaker.speak(R.string.response_removing_task, null)
             updateUI()
         }
     }

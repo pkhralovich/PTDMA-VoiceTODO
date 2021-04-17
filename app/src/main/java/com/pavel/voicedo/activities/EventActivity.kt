@@ -1,9 +1,7 @@
 package com.pavel.voicedo.activities
 
-import android.R.string
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -14,7 +12,6 @@ import com.pavel.voicedo.voice.ActionParser
 import com.pavel.voicedo.voice.Speaker
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -22,8 +19,9 @@ import java.util.regex.Pattern
 
 class EventActivity : ListenableActivity() {
     companion object {
-        private val DATE_PATTERN = "(\\d\\d?)(th|nd|st|rd) of (.*)"
-        private val TIME_PATTERN = "(\\d\\d?)(:(\\d\\d))? (a.m.|p.m.|am|pm)"
+        private const val DATE_PATTERN = "(\\d\\d?)(th|nd|st|rd) of (.*)"
+        private const val TIME_PATTERN_1 = "(\\d\\d?):(\\d\\d) (a.m.|p.m.|am|pm)"
+        private const val TIME_PATTERN_2 = "(\\d\\d?) (a.m.|p.m.|am|pm)"
 
         enum class EnumStatus {
             VIEW, SAY_NAME, SAY_DATE, SAY_TIME, WAITING_CONFIRMATION
@@ -108,6 +106,7 @@ class EventActivity : ListenableActivity() {
             when (action.action) {
                 ActionParser.Action.ActionType.CONFIRMATION -> this.finish()
                 else -> {
+                    hideListenable()
                     this.status = EnumStatus.VIEW
                     updateUI()
                 }
@@ -150,6 +149,11 @@ class EventActivity : ListenableActivity() {
                         else -> onInvalidAction()
                     }
                 }
+                ActionParser.Action.ActionType.DELETE_LIST -> {
+                    event.delete(this)
+                    Speaker.speak(R.string.response_removing_event, null)
+                    finish()
+                }
                 else -> onInvalidAction()
             }
         }
@@ -167,32 +171,32 @@ class EventActivity : ListenableActivity() {
 
     private fun onInputTime(action: ActionParser.Action) {
         try {
-            if (ActionParser.matches(action.param!!, TIME_PATTERN)) {
-                val compiledPattern = Pattern.compile(DATE_PATTERN)
-                val matcher = compiledPattern.matcher(action.param.toLowerCase(Locale.ROOT))
-                matcher.matches()
-
-                val formatter : DateTimeFormatter?
-                if (matcher.groupCount() == 3) formatter = DateTimeFormat.forPattern("hh:mm aa")
-                else formatter = DateTimeFormat.forPattern("hh aa")
-
+            if (ActionParser.matches(action.param!!, TIME_PATTERN_1)) {
+                val formatter = DateTimeFormat.forPattern("hh:mm aa")
                 val date = formatter.parseDateTime(action.param.replace(".", ""))
-
-                val eventDate = DateTime(event.date)
-                event.date = DateTime(eventDate.year, eventDate.monthOfYear, eventDate.dayOfMonth, date.hourOfDay, date.minuteOfHour).toDate()
-                timeSet = true
-
-                if (event.id != null) {
-                    event.save(this)
-                    status = EnumStatus.VIEW
-                    hideListenable()
-                } else status = EnumStatus.SAY_NAME
-
-                updateUI()
+                setDate(date)
+            } else if (ActionParser.matches(action.param!!, TIME_PATTERN_2)) {
+                val formatter = DateTimeFormat.forPattern("hh aa")
+                val date = formatter.parseDateTime(action.param.replace(".", ""))
+                setDate(date)
             } else Speaker.speak(R.string.response_invalid_time, listenerLabel, true)
         } catch (e: Exception) {
             Speaker.speak(R.string.response_invalid_time, listenerLabel, true)
         }
+    }
+
+    private fun setDate(date: DateTime) {
+        val eventDate = DateTime(event.date)
+        event.date = DateTime(eventDate.year, eventDate.monthOfYear, eventDate.dayOfMonth, date.hourOfDay, date.minuteOfHour).toDate()
+        timeSet = true
+
+        if (event.id != null) {
+            event.save(this)
+            status = EnumStatus.VIEW
+            hideListenable()
+        } else status = EnumStatus.SAY_NAME
+
+        updateUI()
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -261,6 +265,7 @@ class EventActivity : ListenableActivity() {
                 showListenable(false)
                 Speaker.speak(R.string.ask_event_time, listenerLabel)
             }
+            else -> {}
         }
     }
 
@@ -282,6 +287,7 @@ class EventActivity : ListenableActivity() {
         when (this.status) {
             EnumStatus.SAY_NAME -> Speaker.speak(R.string.ask_event_name, listenerLabel)
             EnumStatus.SAY_DATE -> Speaker.speak(R.string.ask_event_date, listenerLabel)
+            EnumStatus.SAY_TIME -> Speaker.speak(R.string.ask_event_time, listenerLabel)
             EnumStatus.WAITING_CONFIRMATION -> Speaker.speak(R.string.response_confirm_exit, listenerLabel, true)
             else -> Speaker.speak(R.string.response_how_can_help, listenerLabel)
         }

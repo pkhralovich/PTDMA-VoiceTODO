@@ -95,7 +95,10 @@ class ListActivity : ListenableActivity() {
                 ActionParser.Action.ActionType.CONFIRMATION -> this.finish()
                 else -> {
                     if (list.getProducts().isEmpty()) this.status = EnumStatus.EDIT_LIST
-                    else this.status = EnumStatus.VIEW
+                    else {
+                        hideListenable()
+                        this.status = EnumStatus.VIEW
+                    }
                     updateUI()
                 }
             }
@@ -139,6 +142,11 @@ class ListActivity : ListenableActivity() {
                         else this.status = EnumStatus.VIEW
                         updateUI()
                     } else this.onBackPressed()
+                }
+                ActionParser.Action.ActionType.DELETE_LIST -> {
+                    list.delete()
+                    Speaker.speak(R.string.response_removing_list, null)
+                    finish()
                 }
                 else -> onInvalidAction()
             }
