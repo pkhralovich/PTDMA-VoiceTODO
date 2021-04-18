@@ -186,7 +186,7 @@ class Event : BaseTask(EnumTypes.EVENT) {
         beginTime.set(beginDate.year, beginDate.monthOfYear - 1, beginDate.dayOfMonth, beginDate.hourOfDay, beginDate.minuteOfHour)
 
         val endTime = Calendar.getInstance()
-        beginTime.set(endDate.year, endDate.monthOfYear - 1, endDate.dayOfMonth, endDate.hourOfDay, endDate.minuteOfHour)
+        endTime.set(endDate.year, endDate.monthOfYear - 1, endDate.dayOfMonth, endDate.hourOfDay, endDate.minuteOfHour)
 
 
         if (this.internalId < 0) {

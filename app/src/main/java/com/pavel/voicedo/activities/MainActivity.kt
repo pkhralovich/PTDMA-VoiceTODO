@@ -115,7 +115,7 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
                 }
                 ActionParser.Action.ActionType.SHOW_EVENTS_DAY -> {
                     val weekday = this.currentFilter?.param
-                    if (weekday != null && weekday.isNotEmpty()) {
+                    if (weekday != null && weekday.isNotEmpty() && isWeekday(weekday)) {
                         list.filter {
                             if (it.type == BaseTask.EnumTypes.EVENT) {
                                 val item = it as Event
@@ -127,7 +127,12 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
                                 itemWeekday.equals(weekday, ignoreCase = true)
                             } else false
                         }
-                    } else {
+                    }
+                    else if (weekday != null && !isWeekday(weekday)) {
+                        Speaker.speak(R.string.not_weekday, null)
+                        list
+                    }
+                    else {
                         Speaker.speak(R.string.day_not_specified, null)
                         list
                     }
@@ -174,6 +179,16 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         }
     }
 
+    private fun isWeekday(weekday: String) : Boolean {
+        return DayOfWeek.MONDAY.name.equals(weekday, ignoreCase = true)
+                || DayOfWeek.TUESDAY.name.equals(weekday, ignoreCase = true)
+                || DayOfWeek.WEDNESDAY.name.equals(weekday, ignoreCase = true)
+                || DayOfWeek.THURSDAY.name.equals(weekday, ignoreCase = true)
+                || DayOfWeek.FRIDAY.name.equals(weekday, ignoreCase = true)
+                || DayOfWeek.SATURDAY.name.equals(weekday, ignoreCase = true)
+                || DayOfWeek.SUNDAY.name.equals(weekday, ignoreCase = true)
+    }
+
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.fab)
     fun onClickListen() {
@@ -214,21 +229,6 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
         when (action.action) {
             ActionParser.Action.ActionType.HELP -> onClickHelp()
 
-            ActionParser.Action.ActionType.SHOW_LOCATION -> showLocation()
-
-            ActionParser.Action.ActionType.SHOW_ALL_TASKS,
-            ActionParser.Action.ActionType.SHOW_ALL_EVENTS,
-            ActionParser.Action.ActionType.SHOW_ALL_LISTS,
-            ActionParser.Action.ActionType.SHOW_UNDONE_TASKS,
-            ActionParser.Action.ActionType.SHOW_TASKS_IN_PROCESS,
-            ActionParser.Action.ActionType.SHOW_EVENTS_DAY,
-            ActionParser.Action.ActionType.SHOW_EVENTS_TOMORROW,
-            ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK,
-            ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK -> {
-                currentFilter = action
-                updateUI()
-            }
-
             ActionParser.Action.ActionType.VIEW_TASK -> viewTask(action.param!!)
             ActionParser.Action.ActionType.DELETE_TASK -> deleteTask(action.param!!)
             ActionParser.Action.ActionType.CREATE_TASK -> createTask()
@@ -241,8 +241,20 @@ class MainActivity : ToolbarActivity(), TodoAdapter.Controller, TextToSpeech.OnI
             ActionParser.Action.ActionType.DELETE_LIST -> deleteList(action.param!!)
             ActionParser.Action.ActionType.CREATE_LIST -> createList()
 
-            ActionParser.Action.ActionType.CANCELLATION -> {
+            ActionParser.Action.ActionType.SHOW_LOCATION -> showLocation()
+            ActionParser.Action.ActionType.SHOW_ALL_TASKS,
+            ActionParser.Action.ActionType.SHOW_ALL_EVENTS,
+            ActionParser.Action.ActionType.SHOW_ALL_LISTS,
+            ActionParser.Action.ActionType.SHOW_UNDONE_TASKS,
+            ActionParser.Action.ActionType.SHOW_TASKS_IN_PROCESS,
+            ActionParser.Action.ActionType.SHOW_EVENTS_DAY,
+            ActionParser.Action.ActionType.SHOW_EVENTS_TOMORROW,
+            ActionParser.Action.ActionType.SHOW_EVENTS_CURRENT_WEEK,
+            ActionParser.Action.ActionType.SHOW_EVENTS_NEXT_WEEK -> {
+                currentFilter = action
+                updateUI()
             }
+            ActionParser.Action.ActionType.CANCELLATION -> { }
             else -> Speaker.speak(R.string.response_not_understand, null)
         }
     }

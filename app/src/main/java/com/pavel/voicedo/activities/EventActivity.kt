@@ -174,24 +174,24 @@ class EventActivity : ListenableActivity() {
             if (ActionParser.matches(action.param!!, TIME_PATTERN_1)) {
                 val formatter = DateTimeFormat.forPattern("hh:mm aa")
                 val date = formatter.parseDateTime(action.param.replace(".", ""))
-                setDate(date)
+                setTime(date)
             } else if (ActionParser.matches(action.param!!, TIME_PATTERN_2)) {
                 val formatter = DateTimeFormat.forPattern("hh aa")
                 val date = formatter.parseDateTime(action.param.replace(".", ""))
-                setDate(date)
+                setTime(date)
             } else Speaker.speak(R.string.response_invalid_time, listenerLabel, true)
         } catch (e: Exception) {
             Speaker.speak(R.string.response_invalid_time, listenerLabel, true)
         }
     }
 
-    private fun setDate(date: DateTime) {
+    private fun setTime(date: DateTime) {
         val eventDate = DateTime(event.date)
         event.date = DateTime(eventDate.year, eventDate.monthOfYear, eventDate.dayOfMonth, date.hourOfDay, date.minuteOfHour).toDate()
         timeSet = true
 
-        if (event.id != null) {
-            event.save(this)
+        if (event.description.isNotEmpty()) {
+            if (event.id != null) event.save(this)
             status = EnumStatus.VIEW
             hideListenable()
         } else status = EnumStatus.SAY_NAME
@@ -226,11 +226,12 @@ class EventActivity : ListenableActivity() {
                 }
                 else event.date = date.toDate()
 
-                if (event.id != null) {
-                    event.save(this)
+                if (timeSet && event.description.isNotEmpty()) {
+                    if (event.id != null) event.save(this)
                     status = EnumStatus.VIEW
                     hideListenable()
-                } else status = EnumStatus.SAY_TIME
+                } else if (timeSet) status = EnumStatus.SAY_NAME
+                else status = EnumStatus.SAY_TIME
 
                 updateUI()
             } catch (e: Exception) {

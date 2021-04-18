@@ -149,4 +149,5 @@
     <string name="unable_to_calendar">Unable to make calendar actions, enable the permissions to acces to the calendar!</string>
     <string name="query_not_implemented">Query not implemented!</string>
     <string name="day_not_specified">Day of week is empty, showing everything!</string>
+    <string name="not_weekday">Day of week not valid, showing everything!</string>
 </resources>

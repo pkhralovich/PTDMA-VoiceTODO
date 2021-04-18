@@ -66,24 +66,14 @@ class ActionParser {
         private const val CHANGE_TASK_NAME_PATTERN = "((edit|change) task name)(.*)"
         private const val CHANGE_TASK_STATUS_PATTERN = "((edit|change) task (status|state))(.*)"
         private const val CHANGE_EVENT_NAME_PATTERN = "((edit|change) event name)(.*)"
+        private const val CHANGE_EVENT_TIME_PATTERN = "((edit|change) event time)(.*)"
+        private const val CHANGE_EVENT_DATE_PATTERN = "((edit|change) event date)(.*)"
         //END INPUT PATTERNS
 
         fun parse(raw_action: String, expected_orders: List<Action.ActionType>) : Action {
             val action = raw_action.toLowerCase(Locale.ROOT)
 
             val oRes = when {
-                //QUERIES
-                matches(action, SHOW_ALL_TASKS_PATTERN) -> getAction(Action.ActionType.SHOW_ALL_TASKS, action, SHOW_ALL_TASKS_PATTERN)
-                matches(action, SHOW_ALL_EVENTS_PATTERN) -> getAction(Action.ActionType.SHOW_ALL_EVENTS, action, SHOW_ALL_EVENTS_PATTERN)
-                matches(action, SHOW_ALL_LISTS_PATTERN) -> getAction(Action.ActionType.SHOW_ALL_LISTS, action, SHOW_ALL_LISTS_PATTERN)
-                matches(action, SHOW_UNDONE_TASKS_PATTERN) -> getAction(Action.ActionType.SHOW_UNDONE_TASKS, action, SHOW_UNDONE_TASKS_PATTERN)
-                matches(action, SHOW_TASKS_IN_PROCESS_PATTERN) -> getAction(Action.ActionType.SHOW_TASKS_IN_PROCESS, action, SHOW_TASKS_IN_PROCESS_PATTERN)
-                matches(action, SHOW_EVENTS_DAY_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_DAY, action, SHOW_EVENTS_DAY_PATTERN, true)
-                matches(action, SHOW_EVENTS_CURRENT_WEEK_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_CURRENT_WEEK, action, SHOW_EVENTS_CURRENT_WEEK_PATTERN)
-                matches(action, SHOW_EVENTS_NEXT_WEEK_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_NEXT_WEEK, action, SHOW_EVENTS_NEXT_WEEK_PATTERN)
-                matches(action, SHOW_EVENTS_TOMORROW_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_TOMORROW, action, SHOW_EVENTS_TOMORROW_PATTERN)
-                matches(action, SHOW_LOCATION_PATTERN) -> getAction(Action.ActionType.SHOW_LOCATION, action, SHOW_LOCATION_PATTERN)
-                matches(action, HELP_PATTERN) -> getAction(Action.ActionType.HELP, action, HELP_PATTERN)
                 //TASKS
                 matches(action, VIEW_TASK_PATTERN) -> getAction(Action.ActionType.VIEW_TASK, action, VIEW_TASK_PATTERN, true)
                 matches(action, DELETE_TASK_PATTERN) -> getAction(Action.ActionType.DELETE_TASK, action, DELETE_TASK_PATTERN, true)
@@ -99,12 +89,26 @@ class ActionParser {
                 matches(action, ADD_PRODUCT_PATTERN) -> getAction(Action.ActionType.ADD_PRODUCT, action, ADD_PRODUCT_PATTERN, true)
                 matches(action, REMOVE_PRODUCT_PATTERN) -> getAction(Action.ActionType.REMOVE_PRODUCT, action, REMOVE_PRODUCT_PATTERN, true)
                 matches(action, CHECK_PRODUCT_PATTERN) -> getAction(Action.ActionType.CHECK_PRODUCT, action, CHECK_PRODUCT_PATTERN, true)
+                //QUERIES
+                matches(action, SHOW_ALL_TASKS_PATTERN) -> getAction(Action.ActionType.SHOW_ALL_TASKS, action, SHOW_ALL_TASKS_PATTERN)
+                matches(action, SHOW_ALL_EVENTS_PATTERN) -> getAction(Action.ActionType.SHOW_ALL_EVENTS, action, SHOW_ALL_EVENTS_PATTERN)
+                matches(action, SHOW_ALL_LISTS_PATTERN) -> getAction(Action.ActionType.SHOW_ALL_LISTS, action, SHOW_ALL_LISTS_PATTERN)
+                matches(action, SHOW_UNDONE_TASKS_PATTERN) -> getAction(Action.ActionType.SHOW_UNDONE_TASKS, action, SHOW_UNDONE_TASKS_PATTERN)
+                matches(action, SHOW_TASKS_IN_PROCESS_PATTERN) -> getAction(Action.ActionType.SHOW_TASKS_IN_PROCESS, action, SHOW_TASKS_IN_PROCESS_PATTERN)
+                matches(action, SHOW_EVENTS_DAY_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_DAY, action, SHOW_EVENTS_DAY_PATTERN, true)
+                matches(action, SHOW_EVENTS_CURRENT_WEEK_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_CURRENT_WEEK, action, SHOW_EVENTS_CURRENT_WEEK_PATTERN)
+                matches(action, SHOW_EVENTS_NEXT_WEEK_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_NEXT_WEEK, action, SHOW_EVENTS_NEXT_WEEK_PATTERN)
+                matches(action, SHOW_EVENTS_TOMORROW_PATTERN) -> getAction(Action.ActionType.SHOW_EVENTS_TOMORROW, action, SHOW_EVENTS_TOMORROW_PATTERN)
+                matches(action, SHOW_LOCATION_PATTERN) -> getAction(Action.ActionType.SHOW_LOCATION, action, SHOW_LOCATION_PATTERN)
+                matches(action, HELP_PATTERN) -> getAction(Action.ActionType.HELP, action, HELP_PATTERN)
                 //INPUT
                 matches(action, CONFIRM_PATTERN) -> getAction(Action.ActionType.CONFIRMATION, action, CONFIRM_PATTERN)
                 matches(action, BACK_PATTERN) -> getAction(Action.ActionType.BACK, action, BACK_PATTERN)
                 matches(action, CANCEL_PATTERN) -> getAction(Action.ActionType.CANCELLATION, action, CANCEL_PATTERN)
                 matches(action, FINISH_CREATION_PATTERN) -> getAction(Action.ActionType.FINISH_EDITION, action, FINISH_CREATION_PATTERN)
                 matches(action, CHANGE_EVENT_NAME_PATTERN) -> getAction(Action.ActionType.CHANGE_EVENT_NAME, action, CHANGE_EVENT_NAME_PATTERN)
+                matches(action, CHANGE_EVENT_DATE_PATTERN) -> getAction(Action.ActionType.CHANGE_EVENT_DATE, action, CHANGE_EVENT_DATE_PATTERN)
+                matches(action, CHANGE_EVENT_TIME_PATTERN) -> getAction(Action.ActionType.CHANGE_EVENT_TIME, action, CHANGE_EVENT_TIME_PATTERN)
                 matches(action, CHANGE_LIST_NAME_PATTERN) -> getAction(Action.ActionType.CHANGE_LIST_NAME, action, CHANGE_LIST_NAME_PATTERN)
                 matches(action, CHANGE_TASK_NAME_PATTERN) -> getAction(Action.ActionType.CHANGE_TASK_NAME, action, CHANGE_TASK_NAME_PATTERN)
                 matches(action, CHANGE_TASK_STATUS_PATTERN) -> getAction(Action.ActionType.CHANGE_TASK_STATUS, action, CHANGE_TASK_STATUS_PATTERN)
